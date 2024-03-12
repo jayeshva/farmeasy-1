@@ -110,7 +110,7 @@ class MyDashboard extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text("Better Idea Better Farm",
+                  Text("Better Idea Better Farming",
                       style: GoogleFonts.dancingScript(
                           textStyle: const TextStyle(
                               fontSize: 24, fontWeight: FontWeight.bold))),
