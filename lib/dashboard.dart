@@ -13,7 +13,7 @@ class MyDashboard extends StatelessWidget {
             "FarmEasy",
             style: GoogleFonts.assistant(
               textStyle:
-                  const TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
+                  const TextStyle(fontWeight: FontWeight.bold, fontSize: 23),
             ),
           ),
           backgroundColor: const Color(0x0000892f).withOpacity(1),
@@ -30,7 +30,7 @@ class MyDashboard extends StatelessWidget {
                     "FarmEasy",
                     style: GoogleFonts.bentham(
                         textStyle: const TextStyle(
-                            fontSize: 30, fontWeight: FontWeight.bold)),
+                            fontSize: 28, fontWeight: FontWeight.bold)),
                   ),
                 ),
               ),
@@ -87,7 +87,7 @@ class MyDashboard extends StatelessWidget {
               const Row(
                 children: [
                   SizedBox(
-                    height: 30,
+                    height: 20,
                   )
                 ],
               ),
@@ -97,7 +97,7 @@ class MyDashboard extends StatelessWidget {
                   Text("Welcome !",
                       style: GoogleFonts.dancingScript(
                           textStyle: const TextStyle(
-                              fontSize: 30, fontWeight: FontWeight.bold))),
+                              fontSize: 24, fontWeight: FontWeight.bold))),
                 ],
               ),
               const Row(
@@ -113,7 +113,7 @@ class MyDashboard extends StatelessWidget {
                   Text("Better Idea Better Farm",
                       style: GoogleFonts.dancingScript(
                           textStyle: const TextStyle(
-                              fontSize: 30, fontWeight: FontWeight.bold))),
+                              fontSize: 24, fontWeight: FontWeight.bold))),
                 ],
               ),
             ],
@@ -122,7 +122,7 @@ class MyDashboard extends StatelessWidget {
             padding: const EdgeInsets.all(30.0),
             child: Column(children: [
               const SizedBox(
-                height: 40,
+                height: 30,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -131,12 +131,12 @@ class MyDashboard extends StatelessWidget {
                     InkWell(
                       onTap: () => {Navigator.pushNamed(context, '/schemes')},
                       child: Image.asset("images/schemes.png",
-                          width: 93, height: 93),
+                          width: 73, height: 73),
                     ),
                     Text(
                       "Schemes",
                       style: GoogleFonts.crimsonText(
-                          textStyle: const TextStyle(fontSize: 25)),
+                          textStyle: const TextStyle(fontSize: 22)),
                     )
                   ]),
                   Column(children: [
@@ -145,15 +145,15 @@ class MyDashboard extends StatelessWidget {
                           Navigator.pushNamed(context, '/requests');
                         },
                         child: Image.asset("images/tracker.png",
-                            width: 90, height: 90)),
+                            width: 73, height: 73)),
                     Text("Your requests",
                         style: GoogleFonts.crimsonText(
-                            textStyle: const TextStyle(fontSize: 25)))
+                            textStyle: const TextStyle(fontSize: 22)))
                   ])
                 ],
               ),
               const SizedBox(
-                height: 60,
+                height: 20,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -165,34 +165,34 @@ class MyDashboard extends StatelessWidget {
                       },
                       child: Image.asset(
                         "images/contact.png",
-                        width: 67,
-                        height: 67,
+                        width: 48,
+                        height: 53,
                       ),
                     ),
-                    Text("Contact Us",
-                        style: GoogleFonts.crimsonText(
-                            textStyle: const TextStyle(fontSize: 25)))
+                    Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+                        child: Text("Contact us",
+                            style: GoogleFonts.crimsonText(
+                                textStyle: const TextStyle(fontSize: 22))))
                   ]),
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 0, 14, 25),
+                    padding: const EdgeInsets.fromLTRB(0, 15, 14, 25),
                     child: Column(children: [
                       InkWell(
-                        onTap: () => {
-                          Navigator.pushNamed(context, '/feeds')
-                        },
+                        onTap: () => {Navigator.pushNamed(context, '/feeds')},
                         child: Image.asset("images/feed.png",
-                            width: 90, height: 90),
+                            width: 70, height: 75),
                       ),
                       Text("Feeds",
                           style: GoogleFonts.crimsonText(
-                              textStyle: const TextStyle(fontSize: 25)))
+                              textStyle: const TextStyle(fontSize: 22)))
                     ]),
                   )
                 ],
               ),
-              const SizedBox(height: 50),
+              const SizedBox(height: 20),
               Container(
-                  child: Image.asset("images/dbg.png", height: 200, width: 200))
+                  child: Image.asset("images/dbg.png", height: 80, width: 250))
             ]),
           )
         ]),

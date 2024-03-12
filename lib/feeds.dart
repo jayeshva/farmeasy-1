@@ -10,26 +10,25 @@ class Myfeeds extends StatefulWidget {
 
 class _MyfeedsState extends State<Myfeeds> {
   @override
- Widget build(BuildContext context) {
+  Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(
-           leading: IconButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, "/dashboard");
-                },
-                icon: const Icon(Icons.arrow_back)
-              ),
-          title: Text(
-            "Feeds",
-            style: GoogleFonts.assistant(
-              textStyle:
-                  const TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
-            ),
+          appBar: AppBar(
+        leading: IconButton(
+            onPressed: () {
+              Navigator.pushNamed(context, "/dashboard");
+            },
+            icon: const Icon(Icons.arrow_back)),
+        title: Text(
+          "Feeds",
+          style: GoogleFonts.assistant(
+            textStyle:
+                const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
           ),
-          backgroundColor: const Color(0x0000892f).withOpacity(1),
-          centerTitle: true,
-        )),
+        ),
+        backgroundColor: const Color(0x0000892f).withOpacity(1),
+        centerTitle: true,
+      )),
     );
   }
 }

@@ -80,14 +80,12 @@ class _MySchemesState extends State<MySchemes> {
       'updatedOn': '21/03/2024',
       'description': 'This is a description of Scheme 10'
     }
-    
   ];
 
-   List<String> filterData = [
+  List<String> filterData = [
     'All',
     'Category A',
     'Category B',
-    
   ];
 
   String _selectedFilter = 'All';
@@ -95,76 +93,78 @@ class _MySchemesState extends State<MySchemes> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Scaffold(
-          appBar: AppBar(
-            leading: IconButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, "/dashboard");
-                },
-                icon: const Icon(Icons.arrow_back)),
-            title: Text(
-              "Schemes",
-              style: GoogleFonts.assistant(
-                textStyle:
-                    const TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
+        home: Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+            onPressed: () {
+              Navigator.pushNamed(context, "/dashboard");
+            },
+            icon: const Icon(Icons.arrow_back)),
+        title: Text(
+          "Schemes",
+          style: GoogleFonts.assistant(
+            textStyle:
+                const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+          ),
+        ),
+        backgroundColor: const Color(0x0000892f).withOpacity(1),
+        centerTitle: true,
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            const Material(elevation: 5, child: SizedBox(height: 10)),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  MyFilterDropdown(
+                    filterData: filterData,
+                    selectedFilter: _selectedFilter,
+                    onChanged: (String? newValue) {
+                      if (newValue != null) {
+                        setState(() {
+                          _selectedFilter = newValue;
+                        });
+                      }
+                    },
+                  ),
+                ],
               ),
             ),
-            backgroundColor: const Color(0x0000892f).withOpacity(1),
-            centerTitle: true,
-          ),
-         body: SingleChildScrollView(
-  child: Column(
-    children: [
-      const Material(elevation: 5, child: SizedBox(height: 10)),
-      Padding(
-        padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            MyFilterDropdown(
-              filterData: filterData,
-              selectedFilter: _selectedFilter,
-              onChanged: (String? newValue) {
-                if (newValue != null) {
-                  setState(() {
-                    _selectedFilter = newValue;
-                  });
-                }
-              },
+            const SizedBox(height: 10),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: schemeData.isNotEmpty
+                  ? ListView.separated(
+                      shrinkWrap: true,
+                      itemBuilder: (context, index) {
+                        final data = schemeData[index];
+                        // Check if the schema matches the selected filter
+                        if (_selectedFilter == 'All' ||
+                            data['category'] == _selectedFilter) {
+                          return SchemaWidget(
+                            schemaName: data['schemaName'],
+                            category: data['category'],
+                            lastDate: data['lastDate'],
+                            updatedOn: data['updatedOn'],
+                            description: data['description'],
+                          );
+                        } else {
+                          return Container(); // Return an empty container for schemas that don't match the filter
+                        }
+                      },
+                      separatorBuilder: (context, index) =>
+                          const SizedBox(height: 10),
+                      itemCount: schemeData.length,
+                    )
+                  : Container(), // Render an empty container if there are no schemes matching the filter
             ),
           ],
         ),
       ),
-      const SizedBox(height: 20),
-      Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: ListView.separated(
-  shrinkWrap: true,
-  itemBuilder: (context, index) {
-    final data = schemeData[index];
-    // Check if the schema matches the selected filter
-    if (_selectedFilter == 'All' || data['category'] == _selectedFilter) {
-      return SchemaWidget(
-        schemaName: data['schemaName'],
-        category: data['category'],
-        lastDate: data['lastDate'],
-        updatedOn: data['updatedOn'],
-        description: data['description'],
-      );
-    } else {
-      return Container(); // Return an empty container for schemas that don't match the filter
-    }
-  },
-  separatorBuilder: (context, index) => const SizedBox(height: 10),
-  itemCount: schemeData.length,
-)
-
-      )
-    ],
-  ),
-),
-
-     ) );
+    ));
   }
 }
 
@@ -219,7 +219,7 @@ class _SchemaWidgetState extends State<SchemaWidget> {
               Expanded(
                 flex: 3,
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 5),
+                  padding: const EdgeInsets.symmetric(vertical: 7),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -227,7 +227,7 @@ class _SchemaWidgetState extends State<SchemaWidget> {
                         widget.schemaName!,
                         style: GoogleFonts.alata(
                           textStyle: const TextStyle(
-                            fontSize: 18,
+                            fontSize: 16,
                           ),
                         ),
                       ),
@@ -237,7 +237,7 @@ class _SchemaWidgetState extends State<SchemaWidget> {
                         style: GoogleFonts.alata(
                           textStyle: const TextStyle(
                             fontWeight: FontWeight.normal,
-                            fontSize: 13,
+                            fontSize: 12,
                           ),
                         ),
                       ),
@@ -246,7 +246,7 @@ class _SchemaWidgetState extends State<SchemaWidget> {
                         "Last date      : ${widget.lastDate}",
                         style: GoogleFonts.alata(
                           textStyle: const TextStyle(
-                            fontSize: 13,
+                            fontSize: 12,
                             color: Color.fromARGB(255, 156, 156, 155),
                           ),
                         ),
@@ -256,7 +256,7 @@ class _SchemaWidgetState extends State<SchemaWidget> {
                         "Updated on : ${widget.updatedOn}",
                         style: GoogleFonts.alata(
                           textStyle: const TextStyle(
-                            fontSize: 13,
+                            fontSize: 12,
                             color: Color.fromARGB(255, 156, 156, 155),
                           ),
                         ),
@@ -266,9 +266,9 @@ class _SchemaWidgetState extends State<SchemaWidget> {
                 ),
               ),
               Expanded(
-                flex: 2,
+                flex: 1,
                 child: SizedBox(
-                  width: 85,
+                  width: 15,
                   height: 42,
                   child: ElevatedButton(
                     onPressed: () {
@@ -286,7 +286,7 @@ class _SchemaWidgetState extends State<SchemaWidget> {
                         "Apply",
                         style: GoogleFonts.alata(
                           textStyle: const TextStyle(
-                            fontSize: 18,
+                            fontSize: 15,
                           ),
                         ),
                       ),
@@ -331,7 +331,6 @@ class _SchemaWidgetState extends State<SchemaWidget> {
     );
   }
 }
-
 
 class MyFilterDropdown extends StatefulWidget {
   final List<String> filterData;
@@ -378,7 +377,7 @@ class _MyFilterDropdownState extends State<MyFilterDropdown> {
             iconSize: 30,
             elevation: 16,
             style: GoogleFonts.cairo(
-              textStyle: const TextStyle(fontSize: 18),
+              textStyle: const TextStyle(fontSize: 16),
             ),
             onChanged: widget.onChanged,
             items: widget.filterData.map((String value) {
