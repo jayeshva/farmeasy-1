@@ -33,7 +33,7 @@ void main() {
       '/schemes': (BuildContext context) => const MySchemes(),
       '/requests': (BuildContext context) => const MyRequests(),
       '/contact': (BuildContext context) => const MyContact(),
-      '/feeds': (BuildContext context) => const Myfeeds(),
+      '/feeds': (BuildContext context) => const MyFeeds(),
       '/profile': (BuildContext context) => const MyProfile(),
     },
   ));

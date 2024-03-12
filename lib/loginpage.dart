@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class MyLoginpage extends StatefulWidget {
-  const MyLoginpage({super.key});
+  const MyLoginpage({Key? key}) : super(key: key);
 
   @override
   State<MyLoginpage> createState() => _LoginState();
@@ -12,6 +12,22 @@ class MyLoginpage extends StatefulWidget {
 class _LoginState extends State<MyLoginpage> {
   static const double textFieldWidth = 250; // Desired width for TextField
   static const double textFieldHeight = 50; // Desired height for TextField
+  late TextEditingController _emailController;
+  late TextEditingController _passwordController;
+
+  @override
+  void initState() {
+    super.initState();
+    _emailController = TextEditingController();
+    _passwordController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,6 +81,7 @@ class _LoginState extends State<MyLoginpage> {
                               SizedBox(
                                 height: textFieldHeight,
                                 child: TextField(
+                                  controller: _emailController,
                                   decoration: InputDecoration(
                                     filled: true,
                                     fillColor: const Color.fromARGB(
@@ -83,6 +100,8 @@ class _LoginState extends State<MyLoginpage> {
                               SizedBox(
                                 height: textFieldHeight,
                                 child: TextField(
+                                  controller: _passwordController,
+                                  obscureText: true,
                                   decoration: InputDecoration(
                                     filled: true,
                                     fillColor: const Color.fromARGB(
@@ -107,7 +126,7 @@ class _LoginState extends State<MyLoginpage> {
                                 height: 40, // Set your desired height
                                 child: ElevatedButton(
                                   onPressed: () {
-                                    Navigator.pushNamed(context, '/dashboard');
+                                    _login();
                                   },
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor:
@@ -151,7 +170,6 @@ class _LoginState extends State<MyLoginpage> {
                                         ..onTap = () {
                                           Navigator.pushNamed(
                                               context, '/signup');
-                                          // Handle sign-up button tap here
                                         },
                                     ),
                                   ],
@@ -170,5 +188,42 @@ class _LoginState extends State<MyLoginpage> {
         ),
       ),
     );
+  }
+
+  void _login() {
+    String email = _emailController.text.trim();
+    String password = _passwordController.text.trim();
+
+    if (email.isNotEmpty && _isValidEmail(email) && password.isNotEmpty) {
+      // Perform login action
+      Navigator.pushNamed(context, '/dashboard');
+    } else {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Invalid Data'),
+            content: const Text('Please enter a valid email and password.'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
+
+  bool _isValidEmail(String email) {
+    // Simple email validation using regular expression
+    // This can be further improved as per requirements
+    String emailPattern =
+        r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$'; // Regular expression for email
+    RegExp regex = RegExp(emailPattern);
+    return regex.hasMatch(email);
   }
 }

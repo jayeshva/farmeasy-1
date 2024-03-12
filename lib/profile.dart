@@ -2,34 +2,174 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class MyProfile extends StatefulWidget {
-  const MyProfile({super.key});
+  const MyProfile({Key? key}) : super(key: key);
 
   @override
   State<MyProfile> createState() => _MyProfileState();
 }
 
 class _MyProfileState extends State<MyProfile> {
+  // Sample user data
+  final Map<String, String> userData = {
+    'Name': 'John Doe',
+    'Email': 'john.doe@example.com',
+    'Phone': '+1234567890',
+    'Gender': 'Male',
+    'Aadhaar': '1234 5678 9012',
+    'PAN': 'ABCDE1234F',
+  };
+
+  // Sample counts of subsidies
+  final Map<String, int> subsidyCounts = {
+    'Applied': 10,
+    'Approved': 5,
+    'Rejected': 2,
+    'Under Review': 3,
+  };
+
   @override
-   Widget build(BuildContext context) {
+  Widget build(BuildContext context) {
+    String name = userData['Name'] ?? '';
+    String email = userData['Email'] ?? '';
+    String phone = userData['Phone'] ?? '';
+    String gender = userData['Gender'] ?? '';
+    String aadhaar = userData['Aadhaar'] ?? '';
+    String pan = userData['PAN'] ?? '';
+
+    // Extract the first letter of the name for the profile image
+    String profileInitial = name.isNotEmpty ? name[0].toUpperCase() : '';
+
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-           leading: IconButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, "/dashboard");
-                },
-                icon: const Icon(Icons.arrow_back)
-              ),
+          leading: IconButton(
+            onPressed: () {
+              Navigator.pushNamed(context, "/dashboard");
+            },
+            icon: const Icon(Icons.arrow_back),
+          ),
           title: Text(
             "Profile",
             style: GoogleFonts.assistant(
-              textStyle:
-                  const TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
+              textStyle: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 21,
+              ),
             ),
           ),
           backgroundColor: const Color(0x0000892f).withOpacity(1),
           centerTitle: true,
-        )),
+        ),
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              CircleAvatar(
+                radius: 50,
+                backgroundColor: Colors.blue,
+                child: Text(
+                  profileInitial,
+                  style: TextStyle(fontSize: 35, color: Colors.white),
+                ),
+              ),
+              const SizedBox(height: 20),
+              _buildProfileInfo('Name', name),
+              _buildProfileInfo('Email', email),
+              _buildProfileInfo('Phone', phone),
+              _buildProfileInfo('Gender', gender),
+              _buildProfileInfo('Aadhaar', aadhaar),
+              _buildProfileInfo('PAN', pan),
+              Text("Subsidy Data",
+                  style: GoogleFonts.assistant(
+                      textStyle: const TextStyle(
+                          fontSize: 22,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold))),
+              _buildProfileInfo('Applied', pan),
+              _buildProfileInfo('Approved', pan),
+              _buildProfileInfo('Rejected', pan),
+              _buildProfileInfo('Under Reveiew', pan),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {
+                  // View uploaded PAN document
+                },
+                child: Text('View PAN Document'),
+                style: ElevatedButton.styleFrom(
+                  primary: Theme.of(context).appBarTheme.backgroundColor,
+                ),
+              ),
+              const SizedBox(height: 10),
+              ElevatedButton(
+                onPressed: () {
+                  // View uploaded Aadhaar document
+                },
+                child: Text('View Aadhaar Document'),
+                style: ElevatedButton.styleFrom(
+                  primary: Theme.of(context).appBarTheme.backgroundColor,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildProfileInfo(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            label,
+            style: GoogleFonts.assistant(
+              textStyle: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          Text(
+            value,
+            style: GoogleFonts.assistant(
+              textStyle: const TextStyle(
+                fontSize: 18,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSubsidyCount(String label, int count) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            label,
+            style: GoogleFonts.assistant(
+              textStyle: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          Text(
+            count.toString(),
+            style: GoogleFonts.assistant(
+              textStyle: const TextStyle(
+                fontSize: 18,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
