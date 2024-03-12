@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class MyDashboard extends StatelessWidget {
-  const MyDashboard({super.key});
+  const MyDashboard({Key? key});
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +57,7 @@ class MyDashboard extends StatelessWidget {
               ),
               ListTile(
                 leading: const Icon(Icons.track_changes_rounded),
-                title: const Text(' Track Requsest'),
+                title: const Text(' Track Request'),
                 onTap: () {
                   Navigator.pushNamed(context, '/requests');
                 },
@@ -71,132 +71,178 @@ class MyDashboard extends StatelessWidget {
               ),
               ListTile(
                 leading: const Icon(Icons.logout),
-                title: const Text('LogOut'),
+                title: const Text('Log Out'),
                 onTap: () {
-                  Navigator.pushNamed(context, '/signin');
+                  _showLogoutConfirmationDialog(context);
                 },
               ),
             ],
           ),
         ),
-        body: Column(children: [
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const Row(
-                children: [
-                  SizedBox(
-                    height: 20,
-                  )
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text("Welcome !",
-                      style: GoogleFonts.dancingScript(
-                          textStyle: const TextStyle(
-                              fontSize: 24, fontWeight: FontWeight.bold))),
-                ],
-              ),
-              const Row(
-                children: [
-                  SizedBox(
-                    height: 10,
-                  )
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text("Better Idea Better Farming",
-                      style: GoogleFonts.dancingScript(
-                          textStyle: const TextStyle(
-                              fontSize: 24, fontWeight: FontWeight.bold))),
-                ],
-              ),
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.all(30.0),
-            child: Column(children: [
-              const SizedBox(
-                height: 30,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(children: [
-                    InkWell(
-                      onTap: () => {Navigator.pushNamed(context, '/schemes')},
-                      child: Image.asset("images/schemes.png",
-                          width: 73, height: 73),
-                    ),
+        body: Column(
+          children: [
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
                     Text(
-                      "Schemes",
-                      style: GoogleFonts.crimsonText(
-                          textStyle: const TextStyle(fontSize: 22)),
-                    )
-                  ]),
-                  Column(children: [
-                    InkWell(
-                        onTap: () {
-                          Navigator.pushNamed(context, '/requests');
-                        },
-                        child: Image.asset("images/tracker.png",
-                            width: 73, height: 73)),
-                    Text("Your requests",
-                        style: GoogleFonts.crimsonText(
-                            textStyle: const TextStyle(fontSize: 22)))
-                  ])
-                ],
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(children: [
-                    InkWell(
-                      onTap: () {
-                        Navigator.pushNamed(context, '/contact');
-                      },
-                      child: Image.asset(
-                        "images/contact.png",
-                        width: 48,
-                        height: 53,
-                      ),
+                      "Welcome !",
+                      style: GoogleFonts.dancingScript(
+                          textStyle: const TextStyle(
+                              fontSize: 24, fontWeight: FontWeight.bold)),
                     ),
-                    Padding(
-                        padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
-                        child: Text("Contact us",
+                  ],
+                ),
+                const SizedBox(height: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Better Idea Better Farming",
+                      style: GoogleFonts.dancingScript(
+                          textStyle: const TextStyle(
+                              fontSize: 24, fontWeight: FontWeight.bold)),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.all(30.0),
+              child: Column(
+                children: [
+                  const SizedBox(height: 30),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        children: [
+                          InkWell(
+                            onTap: () =>
+                                Navigator.pushNamed(context, '/schemes'),
+                            child: Image.asset(
+                              "images/schemes.png",
+                              width: 73,
+                              height: 73,
+                            ),
+                          ),
+                          Text(
+                            "Schemes",
                             style: GoogleFonts.crimsonText(
-                                textStyle: const TextStyle(fontSize: 22))))
-                  ]),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 15, 14, 25),
-                    child: Column(children: [
-                      InkWell(
-                        onTap: () => {Navigator.pushNamed(context, '/feeds')},
-                        child: Image.asset("images/feed.png",
-                            width: 70, height: 75),
+                                textStyle: const TextStyle(fontSize: 22)),
+                          )
+                        ],
                       ),
-                      Text("Feeds",
-                          style: GoogleFonts.crimsonText(
-                              textStyle: const TextStyle(fontSize: 22)))
-                    ]),
-                  )
+                      Column(
+                        children: [
+                          InkWell(
+                            onTap: () =>
+                                Navigator.pushNamed(context, '/requests'),
+                            child: Image.asset(
+                              "images/tracker.png",
+                              width: 73,
+                              height: 73,
+                            ),
+                          ),
+                          Text(
+                            "Your requests",
+                            style: GoogleFonts.crimsonText(
+                                textStyle: const TextStyle(fontSize: 22)),
+                          )
+                        ],
+                      )
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        children: [
+                          InkWell(
+                            onTap: () =>
+                                Navigator.pushNamed(context, '/contact'),
+                            child: Image.asset(
+                              "images/contact.png",
+                              width: 48,
+                              height: 53,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+                            child: Text(
+                              "Contact us",
+                              style: GoogleFonts.crimsonText(
+                                  textStyle: const TextStyle(fontSize: 22)),
+                            ),
+                          )
+                        ],
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 15, 14, 25),
+                        child: Column(
+                          children: [
+                            InkWell(
+                              onTap: () =>
+                                  Navigator.pushNamed(context, '/feeds'),
+                              child: Image.asset(
+                                "images/feed.png",
+                                width: 70,
+                                height: 75,
+                              ),
+                            ),
+                            Text(
+                              "Feeds",
+                              style: GoogleFonts.crimsonText(
+                                  textStyle: const TextStyle(fontSize: 22)),
+                            )
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  Container(
+                    child:
+                        Image.asset("images/dbg.png", height: 80, width: 250),
+                  ),
                 ],
               ),
-              const SizedBox(height: 20),
-              Container(
-                  child: Image.asset("images/dbg.png", height: 80, width: 250))
-            ]),
-          )
-        ]),
+            ),
+          ],
+        ),
       ),
+    );
+  }
+
+  void _showLogoutConfirmationDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Confirm Log Out"),
+          content: Text("Are you sure you want to log out?"),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text("Cancel"),
+            ),
+            TextButton(
+              onPressed: () {
+                // Perform log out actions here
+                Navigator.pushNamed(context, '/signin');
+              },
+              child: Text("Log Out"),
+            ),
+          ],
+        );
+      },
     );
   }
 }
