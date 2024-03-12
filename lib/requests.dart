@@ -16,7 +16,7 @@ class _MyRequestsState extends State<MyRequests> {
       'subsidy_id': '0987654321',
       'applied_on': '13/03/2024',
       'status': "Rejected",
-      'comments': "Try again"
+      'comments': "Trygdfhgjhghghjghjfghjghghfghgshdfsfdgsfgfdgdfg again"
     },
     {
       'schemaName': 'Scheme 2',
@@ -76,7 +76,7 @@ class _MyRequestsState extends State<MyRequests> {
             "My Requests",
             style: GoogleFonts.assistant(
               textStyle:
-                  const TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
+                  const TextStyle(fontWeight: FontWeight.bold, fontSize: 21),
             ),
           ),
           backgroundColor: const Color(0x0000892f).withOpacity(1),
@@ -175,8 +175,6 @@ class RequestWidget extends StatelessWidget {
     return Material(
       elevation: 5,
       child: Container(
-        width: 350,
-        height: 105,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(5),
           boxShadow: [
@@ -193,67 +191,66 @@ class RequestWidget extends StatelessWidget {
           ),
         ),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10),
+          padding: const EdgeInsets.fromLTRB(10, 5, 10, 10),
           child: Row(
             children: [
               Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 5),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        schemaName!,
-                        style: GoogleFonts.alata(
-                          textStyle: const TextStyle(
-                            fontSize: 18,
-                          ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      schemaName!,
+                      style: GoogleFonts.alata(
+                        textStyle: const TextStyle(
+                          fontSize: 16,
                         ),
                       ),
-                      const SizedBox(height: 2),
-                      Text(
-                        "Tracker id      : $tracker_id",
-                        style: GoogleFonts.alata(
-                          textStyle: const TextStyle(
-                            fontWeight: FontWeight.normal,
-                            fontSize: 13,
-                          ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      "Tracker id      : $tracker_id",
+                      style: GoogleFonts.alata(
+                        textStyle: const TextStyle(
+                          fontWeight: FontWeight.normal,
+                          fontSize: 12,
                         ),
                       ),
-                      const SizedBox(height: 1.5),
-                      Text(
-                        "Subsidy id      : $subsidy_id",
-                        style: GoogleFonts.alata(
-                          textStyle: const TextStyle(
-                            fontSize: 13,
-                            color: Color.fromARGB(255, 156, 156, 155),
-                          ),
+                    ),
+                    const SizedBox(height: 1.5),
+                    Text(
+                      "Subsidy id      : $subsidy_id",
+                      style: GoogleFonts.alata(
+                        textStyle: const TextStyle(
+                          fontSize: 12,
+                          color: Color.fromARGB(255, 156, 156, 155),
                         ),
                       ),
-                      const SizedBox(height: 1.5),
-                      Text(
+                    ),
+                    const SizedBox(height: 1.5),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                      child: Text(
                         "Applied on : $applied_on",
                         style: GoogleFonts.alata(
                           textStyle: const TextStyle(
-                            fontSize: 13,
+                            fontSize: 12,
                             color: Color.fromARGB(255, 156, 156, 155),
                           ),
                         ),
                       ),
-                    ],
-                  ),
+                    )
+                  ],
                 ),
               ),
-              SizedBox(width: 10),
               Expanded(
                 child: Padding(
-                  padding: const EdgeInsets.only(left:8.0),
+                  padding: const EdgeInsets.only(left: 10.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Padding(
                         padding: const EdgeInsets.only(
-                            top: 15), // Add top padding here
+                            top: 0), // Add top padding here
                         child: Row(
                           children: [
                             Text(
@@ -282,18 +279,23 @@ class RequestWidget extends StatelessWidget {
                             "Comments : ",
                             style: GoogleFonts.alata(
                               textStyle: const TextStyle(
+                                fontSize: 11,
                                 color: Colors.black,
                               ),
                             ),
                           ),
-                          Text(
-                            review_comments!,
-                            style: GoogleFonts.alata(
-                              textStyle: const TextStyle(
-                                color: Color.fromARGB(255, 156, 156, 155),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
+                            child: Text(
+                              review_comments!,
+                              style: GoogleFonts.alata(
+                                textStyle: const TextStyle(
+                                  fontSize: 11,
+                                  color: Color.fromARGB(255, 156, 156, 155),
+                                ),
                               ),
                             ),
-                          ),
+                          )
                         ],
                       ),
                     ],
@@ -330,7 +332,7 @@ class _MyFilterDropdownState extends State<MyFilterDropdown> {
     return DropdownButtonHideUnderline(
       child: Container(
         width: 200,
-        height: 45,
+        height: 35,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
           boxShadow: [

@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -14,23 +13,22 @@ class _MyContactState extends State<MyContact> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(
-           leading: IconButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, "/dashboard");
-                },
-                icon: const Icon(Icons.arrow_back)
-              ),
-          title: Text(
-            "Contacts",
-            style: GoogleFonts.assistant(
-              textStyle:
-                  const TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
-            ),
+          appBar: AppBar(
+        leading: IconButton(
+            onPressed: () {
+              Navigator.pushNamed(context, "/dashboard");
+            },
+            icon: const Icon(Icons.arrow_back)),
+        title: Text(
+          "Contacts",
+          style: GoogleFonts.assistant(
+            textStyle:
+                const TextStyle(fontWeight: FontWeight.bold, fontSize: 21),
           ),
-          backgroundColor: const Color(0x0000892f).withOpacity(1),
-          centerTitle: true,
-        )),
+        ),
+        backgroundColor: const Color(0x0000892f).withOpacity(1),
+        centerTitle: true,
+      )),
     );
   }
 }

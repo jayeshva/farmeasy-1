@@ -14,13 +14,14 @@ class MySplash extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Image.asset("images/agri.png", width: 180, height: 180),
-                const SizedBox(height: 10), // Add spacing between the image and text
+                Image.asset("images/agri.png", width: 110, height: 110),
+                const SizedBox(
+                    height: 10), // Add spacing between the image and text
                 Text(
                   "FarmEasy",
                   style: GoogleFonts.bentham(
                     textStyle: const TextStyle(
-                      fontSize: 36,
+                      fontSize: 28,
                     ),
                   ),
                 ),

@@ -9,11 +9,10 @@ import 'package:farmeasy/dashboard.dart';
 import 'package:farmeasy/registerpage.dart';
 import 'package:farmeasy/splashpage.dart';
 
-
-
 void main() {
-  WidgetsFlutterBinding.ensureInitialized(); // Ensure that Flutter is initialized
-  
+  WidgetsFlutterBinding
+      .ensureInitialized(); // Ensure that Flutter is initialized
+
   // Create a GlobalKey to access the root navigator's context
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
@@ -31,11 +30,11 @@ void main() {
       '/signin': (BuildContext context) => const MyLoginpage(),
       '/signup': (BuildContext context) => const MyRegistrationpage(),
       '/dashboard': (BuildContext context) => const MyDashboard(),
-      '/schemes':(BuildContext context) => const MySchemes(),
-      '/requests':(BuildContext context) => const MyRequests(),
+      '/schemes': (BuildContext context) => const MySchemes(),
+      '/requests': (BuildContext context) => const MyRequests(),
       '/contact': (BuildContext context) => const MyContact(),
-      '/feeds':(BuildContext context) => const Myfeeds(),
-      '/profile':(BuildContext context) => const MyProfile(),
+      '/feeds': (BuildContext context) => const Myfeeds(),
+      '/profile': (BuildContext context) => const MyProfile(),
     },
   ));
 }
