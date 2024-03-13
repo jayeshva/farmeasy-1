@@ -10,7 +10,7 @@ class MySchemes extends StatefulWidget {
 
 class _MySchemesState extends State<MySchemes> {
   var schemeData = [
-    {
+      {
       'schemaName': 'Scheme 1',
       'category': 'Category A',
       'lastDate': '12/03/2024',
@@ -93,33 +93,32 @@ class _MySchemesState extends State<MySchemes> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        home: Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
+      home: Scaffold(
+        appBar: AppBar(
+          leading: IconButton(
             onPressed: () {
               Navigator.pushNamed(context, "/dashboard");
             },
-            icon: const Icon(Icons.arrow_back)),
-        title: Text(
-          "Schemes",
-          style: GoogleFonts.assistant(
-            textStyle:
-                const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+            icon: const Icon(Icons.arrow_back),
           ),
+          title: Text(
+            "Schemes",
+            style: GoogleFonts.assistant(
+              textStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+            ),
+          ),
+          backgroundColor: const Color(0x0000892f).withOpacity(1),
+          centerTitle: true,
         ),
-        backgroundColor: const Color(0x0000892f).withOpacity(1),
-        centerTitle: true,
-      ),
-      body: SingleChildScrollView(
-        child: Column(
+        body: Column(
           children: [
-            const Material(elevation: 5, child: SizedBox(height: 10)),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  MyFilterDropdown(
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children:
+               [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 10, 20, 10),
+                  child: MyFilterDropdown(
                     filterData: filterData,
                     selectedFilter: _selectedFilter,
                     onChanged: (String? newValue) {
@@ -129,46 +128,41 @@ class _MySchemesState extends State<MySchemes> {
                         });
                       }
                     },
+                   
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-            const SizedBox(height: 10),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: schemeData.isNotEmpty
-                  ? ListView.separated(
-                      shrinkWrap: true,
-                      itemBuilder: (context, index) {
-                        final data = schemeData[index];
-                        // Check if the schema matches the selected filter
-                        if (_selectedFilter == 'All' ||
-                            data['category'] == _selectedFilter) {
-                          return SchemaWidget(
-                            schemaName: data['schemaName'],
-                            category: data['category'],
-                            lastDate: data['lastDate'],
-                            updatedOn: data['updatedOn'],
-                            description: data['description'],
-                          );
-                        } else {
-                          return Container(); // Return an empty container for schemas that don't match the filter
-                        }
-                      },
-                      separatorBuilder: (context, index) =>
-                          const SizedBox(height: 10),
-                      itemCount: schemeData.length,
-                    )
-                  : Container(), // Render an empty container if there are no schemes matching the filter
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: ListView.builder(
+                  itemCount: schemeData.length,
+                  itemBuilder: (context, index) {
+                    final data = schemeData[index];
+                    if (_selectedFilter == 'All' || data['category'] == _selectedFilter) {
+                      return SchemaWidget(
+                        schemaName: data['schemaName'],
+                        category: data['category'],
+                        lastDate: data['lastDate'],
+                        updatedOn: data['updatedOn'],
+                        description: data['description'],
+                      );
+                    } else {
+                      return Container();
+                    }
+                  },
+                ),
+              ),
             ),
           ],
         ),
       ),
-    ));
+    );
   }
 }
 
-class SchemaWidget extends StatefulWidget {
+class SchemaWidget extends StatelessWidget {
   final String? schemaName;
   final String? category;
   final String? lastDate;
@@ -185,116 +179,48 @@ class SchemaWidget extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _SchemaWidgetState createState() => _SchemaWidgetState();
-}
-
-class _SchemaWidgetState extends State<SchemaWidget> {
-  @override
   Widget build(BuildContext context) {
-    return Material(
+    return Card(
       elevation: 5,
-      child: Container(
-        width: 380,
-        height: 105,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(5),
-          boxShadow: [
-            BoxShadow(
-              color: const Color.fromARGB(190, 255, 255, 255).withOpacity(0.5),
-              spreadRadius: 8,
-              blurRadius: 30,
-              offset: const Offset(0, 3),
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(8,8,8,10),
+        child: ListTile(
+          title: Text(
+            schemaName!,
+            style: GoogleFonts.alata(
+              textStyle: const TextStyle(fontSize: 16),
             ),
-          ],
-          border: Border.all(
-            color: const Color.fromARGB(255, 200, 195, 195),
-            width: 2,
           ),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          subtitle: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Expanded(
-                flex: 3,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 7),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        widget.schemaName!,
-                        style: GoogleFonts.alata(
-                          textStyle: const TextStyle(
-                            fontSize: 16,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 2),
-                      Text(
-                        "Category      : ${widget.category}",
-                        style: GoogleFonts.alata(
-                          textStyle: const TextStyle(
-                            fontWeight: FontWeight.normal,
-                            fontSize: 12,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 1.5),
-                      Text(
-                        "Last date      : ${widget.lastDate}",
-                        style: GoogleFonts.alata(
-                          textStyle: const TextStyle(
-                            fontSize: 12,
-                            color: Color.fromARGB(255, 156, 156, 155),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 1.5),
-                      Text(
-                        "Updated on : ${widget.updatedOn}",
-                        style: GoogleFonts.alata(
-                          textStyle: const TextStyle(
-                            fontSize: 12,
-                            color: Color.fromARGB(255, 156, 156, 155),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Expanded(
-                flex: 1,
-                child: SizedBox(
-                  width: 15,
-                  height: 42,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      _showApplyPopup(context, widget.description!);
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromARGB(226, 0, 137, 48),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(2, 0, 0, 5),
-                      child: Text(
-                        "Apply",
-                        style: GoogleFonts.alata(
-                          textStyle: const TextStyle(
-                            fontSize: 15,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
+               const SizedBox(height: 1,),
+              Text("Category      : $category"),
+              const SizedBox(height: 1,),
+              Text("Last date      : $lastDate"),
+               const SizedBox(height: 1,),
+              Text("Updated on  : $updatedOn"),
             ],
+          ),
+          trailing: ElevatedButton(
+            onPressed: () {
+              _showApplyPopup(context, description!);
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color.fromARGB(226, 0, 137, 48),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(2, 0, 0, 5),
+              child: Text(
+                "Apply",
+                style: GoogleFonts.alata(
+                  textStyle: const TextStyle(fontSize: 15),
+                ),
+              ),
+            ),
           ),
         ),
       ),
@@ -311,14 +237,14 @@ class _SchemaWidgetState extends State<SchemaWidget> {
           actions: <Widget>[
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
+                Navigator.of(context).pop();
               },
               child: const Text("Cancel"),
             ),
             ElevatedButton(
               onPressed: () {
                 // Handle applying for the scheme
-                Navigator.of(context).pop(); // Close the dialog
+                Navigator.of(context).pop();
               },
               style: ElevatedButton.styleFrom(
                 primary: Colors.green,
@@ -332,7 +258,8 @@ class _SchemaWidgetState extends State<SchemaWidget> {
   }
 }
 
-class MyFilterDropdown extends StatefulWidget {
+
+class MyFilterDropdown extends StatelessWidget {
   final List<String> filterData;
   final String selectedFilter;
   final ValueChanged<String?>? onChanged;
@@ -345,15 +272,9 @@ class MyFilterDropdown extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _MyFilterDropdownState createState() => _MyFilterDropdownState();
-}
-
-class _MyFilterDropdownState extends State<MyFilterDropdown> {
-  @override
   Widget build(BuildContext context) {
     return DropdownButtonHideUnderline(
       child: Container(
-        width: 150,
         height: 35,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
@@ -366,21 +287,18 @@ class _MyFilterDropdownState extends State<MyFilterDropdown> {
           ],
         ),
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
+          padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
           child: DropdownButton<String>(
-            value: widget.selectedFilter,
-            icon: Image.asset(
-              "images/filter.png",
-              width: 27,
-              height: 27,
-            ),
+            value: selectedFilter,
+            icon: const Icon(Icons.arrow_drop_down),
             iconSize: 30,
             elevation: 16,
-            style: GoogleFonts.cairo(
-              textStyle: const TextStyle(fontSize: 16),
-            ),
-            onChanged: widget.onChanged,
-            items: widget.filterData.map((String value) {
+            style: GoogleFonts.cairo(textStyle: const TextStyle(
+              color: Colors.black,
+              fontSize: 16
+            )),
+            onChanged: onChanged,
+            items: filterData.map((String value) {
               return DropdownMenuItem<String>(
                 value: value,
                 child: Padding(

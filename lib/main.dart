@@ -17,7 +17,7 @@ void main() {
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
   // Delayed navigation after 5 seconds
-  Future.delayed(const Duration(seconds: 1), () {
+  Future.delayed(const Duration(seconds: 7), () {
     // Navigate to Sign in route after 5 seconds
     navigatorKey.currentState!.pushReplacementNamed('/signin');
   });
@@ -27,8 +27,8 @@ void main() {
     initialRoute: '/',
     routes: <String, WidgetBuilder>{
       '/': (BuildContext context) => const MySplash(),
-      '/signin': (BuildContext context) => const MyLoginpage(),
-      '/signup': (BuildContext context) => const MyRegistrationpage(),
+      '/signin': (BuildContext context) => const MyLoginPage(),
+      '/signup': (BuildContext context) => const MyRegistrationPage(),
       '/dashboard': (BuildContext context) => const MyDashboard(),
       '/schemes': (BuildContext context) => const MySchemes(),
       '/requests': (BuildContext context) => const MyRequests(),

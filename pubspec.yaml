@@ -38,6 +38,7 @@ dependencies:
   json_annotation: ^4.8.0
   google_fonts: ^4.0.3
   http: ^0.13.5
+  url_launcher: ^6.0.13
 
 dev_dependencies:
   flutter_test:

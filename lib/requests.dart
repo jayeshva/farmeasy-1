@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class MyRequests extends StatefulWidget {
-  const MyRequests({super.key});
+  const MyRequests({Key? key}) : super(key: key);
 
   @override
   State<MyRequests> createState() => _MyRequestsState();
@@ -10,7 +10,7 @@ class MyRequests extends StatefulWidget {
 
 class _MyRequestsState extends State<MyRequests> {
   var requestData = [
-    {
+      {
       'schemaName': 'Scheme 1',
       'tracker_id': '1234567890',
       'subsidy_id': '0987654321',
@@ -57,7 +57,7 @@ class _MyRequestsState extends State<MyRequests> {
       'applied_on': '13/03/2024',
       'status': "Under Review",
       'comments': "Wait a week"
-    },
+    }
   ];
   List<String> filterData = ['All', 'Approved', 'Rejected', 'Under Review'];
 
@@ -75,14 +75,14 @@ class _MyRequestsState extends State<MyRequests> {
           title: Text(
             "My Requests",
             style: GoogleFonts.assistant(
-              textStyle:
-                  const TextStyle(fontWeight: FontWeight.bold, fontSize: 21),
+              textStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 21),
             ),
           ),
           backgroundColor: const Color(0x0000892f).withOpacity(1),
           centerTitle: true,
         ),
-        body: SingleChildScrollView(
+        body: Padding(
+          padding: const EdgeInsets.all(8.0),
           child: Column(
             children: [
               const Material(elevation: 5, child: SizedBox(height: 10)),
@@ -106,31 +106,26 @@ class _MyRequestsState extends State<MyRequests> {
                 ),
               ),
               const SizedBox(height: 20),
-              Padding(
-                  padding: const EdgeInsets.fromLTRB(8.0, 0, 8.0, 0),
-                  child: ListView.separated(
-                    shrinkWrap: true,
-                    itemBuilder: (context, index) {
-                      final data = requestData[index];
-                      // Check if the schema matches the selected filter
-                      if (_selectedFilter == 'All' ||
-                          data['status'] == _selectedFilter) {
-                        return RequestWidget(
-                          schemaName: data['schemaName'],
-                          tracker_id: data['tracker_id'],
-                          subsidy_id: data['subsidy_id'],
-                          review_status: data['status'],
-                          review_comments: data['comments'],
-                          applied_on: data['applied_on'],
-                        );
-                      } else {
-                        return Container(); // Return an empty container for schemas that don't match the filter
-                      }
-                    },
-                    separatorBuilder: (context, index) =>
-                        const SizedBox(height: 10),
-                    itemCount: requestData.length,
-                  ))
+              Expanded(
+                child: ListView.builder(
+                  itemCount: requestData.length,
+                  itemBuilder: (context, index) {
+                    final data = requestData[index];
+                    if (_selectedFilter == 'All' || data['status'] == _selectedFilter) {
+                      return RequestWidget(
+                        schemaName: data['schemaName'],
+                        tracker_id: data['tracker_id'],
+                        subsidy_id: data['subsidy_id'],
+                        review_status: data['status'],
+                        review_comments: data['comments'],
+                        applied_on: data['applied_on'],
+                      );
+                    } else {
+                      return Container();
+                    }
+                  },
+                ),
+              ),
             ],
           ),
         ),
@@ -154,8 +149,8 @@ class RequestWidget extends StatelessWidget {
     required this.review_status,
     required this.applied_on,
     required this.review_comments,
-    super.key,
-  });
+    Key? key,
+  }) : super(key: key);
 
   Color getColorForStatus(String? status) {
     switch (status) {
@@ -172,145 +167,91 @@ class RequestWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
+    return Card(
       elevation: 5,
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(5),
-          boxShadow: [
-            BoxShadow(
-              color: const Color.fromARGB(190, 255, 255, 255).withOpacity(0.5),
-              spreadRadius: 8,
-              blurRadius: 30, // Increase blur radius for more pronounced shadow
-              offset: const Offset(0, 3), // Offset for the shadow
-            ),
-          ],
-          border: Border.all(
-            color: const Color.fromARGB(255, 200, 195, 195), // Stroke color
-            width: 2, // Stroke width
-          ),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(10, 5, 10, 10),
-          child: Row(
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      schemaName!,
-                      style: GoogleFonts.alata(
-                        textStyle: const TextStyle(
-                          fontSize: 16,
-                        ),
-                      ),
+      child: Padding(
+        padding: const EdgeInsets.all(10),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+          Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    schemaName!,
+                    style: GoogleFonts.alata(fontSize: 16),
+                  ),
+                  const SizedBox(height: 5),
+                  Text(
+                    "Tracker id      : $tracker_id",
+                    style: GoogleFonts.alata(fontSize: 12),
+                  ),
+                  Text(
+                    "Subsidy id      : $subsidy_id",
+                    style: GoogleFonts.alata(
+                      fontSize: 12,
+                      color: Colors.grey,
                     ),
-                    const SizedBox(height: 2),
-                    Text(
-                      "Tracker id      : $tracker_id",
-                      style: GoogleFonts.alata(
-                        textStyle: const TextStyle(
-                          fontWeight: FontWeight.normal,
-                          fontSize: 12,
-                        ),
-                      ),
+                  ),
+                  Text(
+                    "Applied on      : $applied_on",
+                    style: GoogleFonts.alata(
+                      fontSize: 12,
+                      color: Colors.grey,
                     ),
-                    const SizedBox(height: 1.5),
-                    Text(
-                      "Subsidy id      : $subsidy_id",
-                      style: GoogleFonts.alata(
-                        textStyle: const TextStyle(
-                          fontSize: 12,
-                          color: Color.fromARGB(255, 156, 156, 155),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 1.5),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                      child: Text(
-                        "Applied on : $applied_on",
-                        style: GoogleFonts.alata(
-                          textStyle: const TextStyle(
-                            fontSize: 12,
-                            color: Color.fromARGB(255, 156, 156, 155),
-                          ),
-                        ),
-                      ),
-                    )
-                  ],
-                ),
+                  ),
+                ],
               ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 10.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+            const SizedBox(width: 20),
+            Expanded(
+              flex: 2,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            top: 0), // Add top padding here
-                        child: Row(
-                          children: [
-                            Text(
-                              "Status : ",
-                              style: GoogleFonts.alata(
-                                textStyle: const TextStyle(
-                                  color: Colors.black,
-                                ),
-                              ),
-                            ),
-                            Text(
-                              review_status!,
-                              style: GoogleFonts.alata(
-                                textStyle: TextStyle(
-                                  color: getColorForStatus(review_status),
-                                ),
-                              ),
-                            ),
-                          ],
+                      Text( 
+                        "Status : ",
+                        style: GoogleFonts.alata(
+                          color: Colors.black,
                         ),
                       ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Comments : ",
-                            style: GoogleFonts.alata(
-                              textStyle: const TextStyle(
-                                fontSize: 11,
-                                color: Colors.black,
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
-                            child: Text(
-                              review_comments!,
-                              style: GoogleFonts.alata(
-                                textStyle: const TextStyle(
-                                  fontSize: 11,
-                                  color: Color.fromARGB(255, 156, 156, 155),
-                                ),
-                              ),
-                            ),
-                          )
-                        ],
+                      Text(
+                        review_status!,
+                        style: GoogleFonts.alata(
+                          color: getColorForStatus(review_status),
+                        ),
                       ),
                     ],
                   ),
-                ),
+                  const SizedBox(height: 5),
+                  Text(
+                    "Comments : ",
+                    style: GoogleFonts.alata(
+                      fontSize: 12,
+                      color: Colors.black,
+                    ),
+                  ),
+                  Text(
+                    review_comments!,
+                    style: GoogleFonts.alata(
+                      fontSize: 12,
+                      color: Colors.grey,
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
   }
 }
 
-class MyFilterDropdown extends StatefulWidget {
+
+
+class MyFilterDropdown extends StatelessWidget {
   final List<String> filterData;
   final String selectedFilter;
   final ValueChanged<String?>? onChanged;
@@ -323,15 +264,9 @@ class MyFilterDropdown extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _MyFilterDropdownState createState() => _MyFilterDropdownState();
-}
-
-class _MyFilterDropdownState extends State<MyFilterDropdown> {
-  @override
   Widget build(BuildContext context) {
     return DropdownButtonHideUnderline(
       child: Container(
-        width: 200,
         height: 35,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
@@ -344,21 +279,18 @@ class _MyFilterDropdownState extends State<MyFilterDropdown> {
           ],
         ),
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
+          padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
           child: DropdownButton<String>(
-            value: widget.selectedFilter,
-            icon: Image.asset(
-              "images/filter.png",
-              width: 27,
-              height: 27,
-            ),
+            value: selectedFilter,
+            icon: const Icon(Icons.arrow_drop_down),
             iconSize: 30,
             elevation: 16,
-            style: GoogleFonts.cairo(
-              textStyle: const TextStyle(fontSize: 18),
-            ),
-            onChanged: widget.onChanged,
-            items: widget.filterData.map((String value) {
+            style: GoogleFonts.cairo(textStyle: TextStyle(
+              color: Colors.black,
+              fontSize: 16
+            )),
+            onChanged: onChanged,
+            items: filterData.map((String value) {
               return DropdownMenuItem<String>(
                 value: value,
                 child: Padding(
