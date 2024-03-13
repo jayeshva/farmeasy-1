@@ -2,17 +2,16 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class MyRegistrationpage extends StatefulWidget {
-  const MyRegistrationpage({Key? key}) : super(key: key);
+class MyRegistrationPage extends StatefulWidget {
+  const MyRegistrationPage({Key? key}) : super(key: key);
 
   @override
-  State<MyRegistrationpage> createState() => _RegistrationState();
+  State<MyRegistrationPage> createState() => _RegistrationState();
 }
 
-class _RegistrationState extends State<MyRegistrationpage> {
+class _RegistrationState extends State<MyRegistrationPage> {
   late TextEditingController _otpController;
-  final double textFieldHeight = 47; // Desired height for TextField
-  final double textFieldWidth = 180; // Desired width for TextField
+  final double textFieldHeight = 47;
   static const double sizedBoxHeight = 15;
 
   @override
@@ -25,265 +24,261 @@ class _RegistrationState extends State<MyRegistrationpage> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        body: Container(
-          color: const Color.fromARGB(89, 238, 238, 238),
-          width: double.infinity,
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(15, 20, 15, 15),
-            child: Column(
-              children: [
-                Text(
-                  "Register Here",
-                  style: GoogleFonts.bentham(
-                    textStyle: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 25,
+        resizeToAvoidBottomInset: false,
+        body: SingleChildScrollView(
+          child: Container(
+            color: const Color.fromARGB(89, 238, 238, 238),
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(15, 80, 15, 15),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    "Register Here",
+                    style: GoogleFonts.bentham(
+                      textStyle: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 25,
+                      ),
                     ),
                   ),
-                ),
-                const SizedBox(height: 10),
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: [
-                      BoxShadow(
-                        color: const Color(0xD9D9D9).withOpacity(0.4),
-                        spreadRadius: 2,
-                        blurRadius: 1,
-                        offset:
-                            const Offset(0, 4), // changes position of shadow
-                      ),
-                    ],
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(15, 0, 15, 15),
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(0, 30, 0, 0),
-                          child: Column(
-                            children: [
-                              SizedBox(
-                                height:
-                                    textFieldHeight, // Set height using key variable
-                                child: TextField(
-                                  decoration: InputDecoration(
-                                    filled: true,
-                                    fillColor: const Color.fromARGB(
-                                        255, 242, 242, 243),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide: const BorderSide(
-                                        color: Color.fromARGB(226, 0, 137, 48),
-                                      ), // Border color when focused
-                                    ),
-                                    border: OutlineInputBorder(),
-                                    labelText: 'Name',
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(height: sizedBoxHeight),
-                              SizedBox(
-                                height:
-                                    textFieldHeight, // Set height using key variable
-                                child: TextField(
-                                  decoration: InputDecoration(
-                                    filled: true,
-                                    fillColor: const Color.fromARGB(
-                                        255, 242, 242, 243),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide: const BorderSide(
-                                        color: Color.fromARGB(226, 0, 137, 48),
-                                      ), // Border color when focused
-                                    ),
-                                    border: OutlineInputBorder(
-                                      borderSide: const BorderSide(
-                                        color: Color.fromARGB(226, 0, 137, 48),
-                                      ), // Set the border color here
-                                    ),
-                                    labelText: 'Email',
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(height: sizedBoxHeight),
-                              SizedBox(
-                                height:
-                                    textFieldHeight, // Set height using key variable
-                                child: TextField(
-                                  decoration: InputDecoration(
-                                    filled: true,
-                                    fillColor: const Color.fromARGB(
-                                        255, 242, 242, 243),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide: const BorderSide(
-                                        color: Color.fromARGB(226, 0, 137, 48),
-                                      ), // Border color when focused
-                                    ),
-                                    border: OutlineInputBorder(),
-                                    labelText: 'Phone',
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(height: sizedBoxHeight),
-                              SizedBox(
-                                height:
-                                    textFieldHeight, // Set height using key variable
-                                child: TextField(
-                                  decoration: InputDecoration(
-                                    filled: true,
-                                    fillColor: const Color.fromARGB(
-                                        255, 242, 242, 243),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide: const BorderSide(
-                                        color: Color.fromARGB(226, 0, 137, 48),
-                                      ), // Border color when focused
-                                    ),
-                                    border: OutlineInputBorder(
-                                      borderSide: const BorderSide(
-                                        color: Color.fromARGB(226, 0, 137, 48),
-                                      ), // Set the border color here
-                                    ),
-                                    labelText: 'Gender',
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(height: sizedBoxHeight),
-                              SizedBox(
-                                height:
-                                    textFieldHeight, // Set height using key variable
-                                child: TextField(
-                                  decoration: InputDecoration(
-                                    filled: true,
-                                    fillColor: const Color.fromARGB(
-                                        255, 242, 242, 243),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide: const BorderSide(
-                                        color: Color.fromARGB(226, 0, 137, 48),
-                                      ), // Border color when focused
-                                    ),
-                                    border: OutlineInputBorder(),
-                                    labelText: 'Password',
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(height: sizedBoxHeight),
-                              SizedBox(
-                                height:
-                                    textFieldHeight, // Set height using key variable
-                                child: TextField(
-                                  decoration: InputDecoration(
-                                    filled: true,
-                                    fillColor: const Color.fromARGB(
-                                        255, 242, 242, 243),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide: const BorderSide(
-                                        color: Color.fromARGB(226, 0, 137, 48),
-                                      ), // Border color when focused
-                                    ),
-                                    border: OutlineInputBorder(
-                                      borderSide: const BorderSide(
-                                        color: Color.fromARGB(226, 0, 137, 48),
-                                      ), // Set the border color here
-                                    ),
-                                    labelText: 'Aadhaar',
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(height: sizedBoxHeight),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  SizedBox(
-                                    height: 40,
-                                    child: ElevatedButton(
-                                      onPressed: () {
-                                        // Handle file upload button tap here
-                                      },
-                                      child: const Text(
-                                        'Upload Aadhar',
-                                        style: TextStyle(fontSize: 14),
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(width: 10),
-                                  SizedBox(
-                                    height: 40,
-                                    child: ElevatedButton(
-                                      onPressed: () {
-                                        // Handle file upload button tap here
-                                      },
-                                      child: const Text(
-                                        'Upload PAN',
-                                        style: TextStyle(fontSize: 14),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 20),
-                              SizedBox(
-                                width: 110, // Set width using key variable
-                                height: 40, // Set your desired height
-                                child: ElevatedButton(
-                                  onPressed: () {
-                                    _showOTPDialog();
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor:
-                                        const Color.fromARGB(226, 0, 137, 48),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                  ),
-                                  child: Text(
-                                    "Sign up",
-                                    style: GoogleFonts.bentham(
-                                      textStyle: const TextStyle(
-                                        fontSize: 20,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              Text.rich(
-                                TextSpan(
-                                  text: "Are you Already a user? ",
-                                  style: GoogleFonts.bentham(
-                                    textStyle: const TextStyle(
-                                      fontSize: 20,
-                                      color: Colors.red,
-                                    ),
-                                  ),
-                                  children: [
-                                    TextSpan(
-                                      text: "Sign in",
-                                      style: GoogleFonts.bentham(
-                                        textStyle: const TextStyle(
-                                          fontSize: 20,
-                                          color: Colors
-                                              .green, // Change color to green
-                                        ),
-                                      ),
-                                      recognizer: TapGestureRecognizer()
-                                        ..onTap = () {
-                                          Navigator.pushNamed(
-                                              context, '/signin');
-                                          // Handle sign-up button tap here
-                                        },
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
+                  const SizedBox(height: 10),
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      boxShadow: [
+                        BoxShadow(
+                          color: const Color(0x00d9d9d9).withOpacity(0.4),
+                          spreadRadius: 2,
+                          blurRadius: 1,
+                          offset: const Offset(0, 4),
                         ),
                       ],
                     ),
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(15, 0, 15, 15),
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(0, 30, 0, 0),
+                            child: Column(
+                              children: [
+                                SizedBox(
+                                  height: textFieldHeight,
+                                  child: const TextField(
+                                    decoration: InputDecoration(
+                                      filled: true,
+                                      fillColor: Color.fromARGB(
+                                          255, 242, 242, 243),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                          color: Color.fromARGB(226, 0, 137, 48),
+                                        ),
+                                      ),
+                                      border: OutlineInputBorder(),
+                                      labelText: 'Name',
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: sizedBoxHeight),
+                                SizedBox(
+                                  height: textFieldHeight,
+                                  child: const TextField(
+                                    decoration: InputDecoration(
+                                      filled: true,
+                                      fillColor: Color.fromARGB(
+                                          255, 242, 242, 243),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                          color: Color.fromARGB(226, 0, 137, 48),
+                                        ),
+                                      ),
+                                      border: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                          color: Color.fromARGB(226, 0, 137, 48),
+                                        ),
+                                      ),
+                                      labelText: 'Email',
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: sizedBoxHeight),
+                                SizedBox(
+                                  height: textFieldHeight,
+                                  child: const TextField(
+                                    decoration: InputDecoration(
+                                      filled: true,
+                                      fillColor: Color.fromARGB(
+                                          255, 242, 242, 243),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                          color: Color.fromARGB(226, 0, 137, 48),
+                                        ),
+                                      ),
+                                      border: OutlineInputBorder(),
+                                      labelText: 'Phone',
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: sizedBoxHeight),
+                                SizedBox(
+                                  height: textFieldHeight,
+                                  child: const TextField(
+                                    decoration: InputDecoration(
+                                      filled: true,
+                                      fillColor: Color.fromARGB(
+                                          255, 242, 242, 243),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                          color: Color.fromARGB(226, 0, 137, 48),
+                                        ),
+                                      ),
+                                      border: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                          color: Color.fromARGB(226, 0, 137, 48),
+                                        ),
+                                      ),
+                                      labelText: 'Gender',
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: sizedBoxHeight),
+                                SizedBox(
+                                  height: textFieldHeight,
+                                  child: const TextField(
+                                    decoration: InputDecoration(
+                                      filled: true,
+                                      fillColor: Color.fromARGB(
+                                          255, 242, 242, 243),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                          color: Color.fromARGB(226, 0, 137, 48),
+                                        ),
+                                      ),
+                                      border: OutlineInputBorder(),
+                                      labelText: 'Password',
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: sizedBoxHeight),
+                                SizedBox(
+                                  height: textFieldHeight,
+                                  child: const TextField(
+                                    decoration: InputDecoration(
+                                      filled: true,
+                                      fillColor: Color.fromARGB(
+                                          255, 242, 242, 243),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                          color: Color.fromARGB(226, 0, 137, 48),
+                                        ),
+                                      ),
+                                      border: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                          color: Color.fromARGB(226, 0, 137, 48),
+                                        ),
+                                      ),
+                                      labelText: 'Aadhaar',
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: sizedBoxHeight),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    SizedBox(
+                                      height: 40,
+                                      child: ElevatedButton(
+                                        onPressed: () {
+                                          // Handle file upload button tap here
+                                        },
+                                        child: const Text(
+                                          'Upload Aadhar',
+                                          style: TextStyle(fontSize: 14),
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 10),
+                                    SizedBox(
+                                      height: 40,
+                                      child: ElevatedButton(
+                                        onPressed: () {
+                                          // Handle file upload button tap here
+                                        },
+                                        child: const Text(
+                                          'Upload PAN',
+                                          style: TextStyle(fontSize: 14),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 20),
+                                SizedBox(
+                                  width: 110,
+                                  height: 40,
+                                  child: ElevatedButton(
+                                    onPressed: () {
+                                      _showOTPDialog();
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor:
+                                          const Color.fromARGB(226, 0, 137, 48),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                    ),
+                                    child: Text(
+                                      "Sign up",
+                                      style: GoogleFonts.bentham(
+                                        textStyle: const TextStyle(
+                                          fontSize: 20,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                                Text.rich(
+                                  TextSpan(
+                                    text: "Are you Already a user? ",
+                                    style: GoogleFonts.bentham(
+                                      textStyle: const TextStyle(
+                                        fontSize: 20,
+                                        color: Colors.red,
+                                      ),
+                                    ),
+                                    children: [
+                                      TextSpan(
+                                        text: "Sign in",
+                                        style: GoogleFonts.bentham(
+                                          textStyle: const TextStyle(
+                                            fontSize: 20,
+                                            color: Colors.green,
+                                          ),
+                                        ),
+                                        recognizer: TapGestureRecognizer()
+                                          ..onTap = () {
+                                            Navigator.pushNamed(
+                                                context, '/signin');
+                                          },
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:convert';
+import 'package:url_launcher/url_launcher.dart';
+
 
 String generateBase64Image() {
   // Sample image URL
@@ -39,7 +41,97 @@ class _MyContactState extends State<MyContact> {
       'organisation': 'TNAU',
       'mobile': '7602787005',
       'email': 'jayesh.cs20@bitsathy.ac.in',
+      'location': 'Kovafghgfhgfghi',
+      'designation': 'clerk'
+    },
+    {
+      'profileimg': generateBase64Image(),
+      'userName': 'Jayesh V A',
+      'organisation': 'TNAU',
+      'mobile': '7602787005',
+      'email': 'jayesh.cs20@bitsathy.ac.in',
+      'location': 'Erode',
+      'designation': 'clerk'
+    },
+    {
+      'profileimg': generateBase64Image(),
+      'userName': 'Jayesh V A',
+      'organisation': 'TNAU',
+      'mobile': '7602787005',
+      'email': 'jayesh.cs20@bitsathy.ac.in',
       'location': 'Kovai',
+      'designation': 'clerk'
+    },
+    {
+      'profileimg': generateBase64Image(),
+      'userName': 'Jayesh V A',
+      'organisation': 'TNAU',
+      'mobile': '7602787005',
+      'email': 'jayesh.cs20@bitsathy.ac.in',
+      'location': 'Erode',
+      'designation': 'VAO'
+    },
+      {
+      'profileimg': generateBase64Image(),
+      'userName': 'Jayesh V A',
+      'organisation': 'TNAU',
+      'mobile': '7602787005',
+      'email': 'jayesh.cs20@bitsathy.ac.in',
+      'location': 'Erode',
+      'designation': 'officer'
+    },
+    {
+      'profileimg': generateBase64Image(),
+      'userName': 'Jayesh V A',
+      'organisation': 'TNAU',
+      'mobile': '7602787005',
+      'email': 'jayesh.cs20@bitsathy.ac.in',
+      'location': 'Kovafghgfhgfghi',
+      'designation': 'clerk'
+    },
+    {
+      'profileimg': generateBase64Image(),
+      'userName': 'Jayesh V A',
+      'organisation': 'TNAU',
+      'mobile': '7602787005',
+      'email': 'jayesh.cs20@bitsathy.ac.in',
+      'location': 'Erode',
+      'designation': 'clerk'
+    },
+    {
+      'profileimg': generateBase64Image(),
+      'userName': 'Jayesh V A',
+      'organisation': 'TNAU',
+      'mobile': '7602787005',
+      'email': 'jayesh.cs20@bitsathy.ac.in',
+      'location': 'Kovai',
+      'designation': 'clerk'
+    },
+    {
+      'profileimg': generateBase64Image(),
+      'userName': 'Jayesh V A',
+      'organisation': 'TNAU',
+      'mobile': '7602787005',
+      'email': 'jayesh.cs20@bitsathy.ac.in',
+      'location': 'Erode',
+      'designation': 'VAO'
+    },
+      {
+      'profileimg': generateBase64Image(),
+      'userName': 'Jayesh V A',
+      'organisation': 'TNAU',
+      'mobile': '7602787005',
+      'email': 'jayesh.cs20@bitsathy.ac.in',
+      'location': 'Erode',
+      'designation': 'officer'
+    },
+    {
+      'profileimg': generateBase64Image(),
+      'userName': 'Jayesh V A',
+      'organisation': 'TNAU',
+      'mobile': '7602787005',
+      'email': 'jayesh.cs20@bitsathy.ac.in',
+      'location': 'Kovafghgfhgfghi',
       'designation': 'clerk'
     },
     {
@@ -74,10 +166,11 @@ class _MyContactState extends State<MyContact> {
   List<String> filterData = [
     'All',
     'Erode',
-    'Kovai',
+    'Kovai'
   ];
 
   String _selectedFilter = 'All';
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -98,67 +191,196 @@ class _MyContactState extends State<MyContact> {
           backgroundColor: const Color(0x0000892f).withOpacity(1),
           centerTitle: true,
         ),
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              const Material(elevation: 5, child: SizedBox(height: 10)),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    MyFilterDropdown(
-                      filterData: filterData,
-                      selectedFilter: _selectedFilter,
-                      onChanged: (String? newValue) {
-                        if (newValue != null) {
-                          setState(() {
-                            _selectedFilter = newValue;
-                          });
-                        }
-                      },
-                    ),
-                  ],
+        body: Column(
+          children: [
+            const Material(elevation: 5, child: SizedBox(height: 10)),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  MyFilterDropdown(
+                    filterData: filterData,
+                    selectedFilter: _selectedFilter,
+                    onChanged: (String? newValue) {
+                      if (newValue != null) {
+                        setState(() {
+                          _selectedFilter = newValue;
+                        });
+                      }
+                    },
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 20),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    children: schemeData.map((data) {
+                      if (_selectedFilter == 'All' ||
+                          data['location'] == _selectedFilter) {
+                        return Column(
+                          children: [
+                            ContactWidget(
+                              userName: data['userName'],
+                              organisation: data['organisation'],
+                              location: data['location'],
+                              mobile: data['mobile'],
+                              email: data['email'],
+                              designation: data['designation'],
+                              profileimg: data['profileimg'],
+                            ),
+                            const SizedBox(height: 10), // Add space between cards
+                          ],
+                        );
+                      } else {
+                        return Container();
+                      }
+                    }).toList(),
+                  ),
                 ),
               ),
-              const SizedBox(height: 10),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: schemeData.isNotEmpty
-                    ? ListView.separated(
-                        shrinkWrap: true,
-                        itemBuilder: (context, index) {
-                          final data = schemeData[index];
-                          // Check if the schema matches the selected filter
-                          if (_selectedFilter == 'All' ||
-                              data['location'] == _selectedFilter) {
-                            return ContactWidget(
-                                userName: data['userName'],
-                                organisation: data['organisation'],
-                                location: data['location'],
-                                mobile: data['mobile'],
-                                email: data['email'],
-                                designation: data['designation'],
-                                profileimg: data['profileimg']);
-                          } else {
-                            return Container(); // Return an empty container for schemas that don't match the filter
-                          }
-                        },
-                        separatorBuilder: (context, index) =>
-                            const SizedBox(height: 10),
-                        itemCount: schemeData.length,
-                      )
-                    : Container(), // Render an empty container if there are no schemes matching the filter
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
   }
 }
 
-class ContactWidget extends StatefulWidget {
+// class ContactWidget extends StatelessWidget {
+//   final String? userName;
+//   final String? organisation;
+//   final String? location;
+//   final String? email;
+//   final String? mobile;
+//   final String? designation;
+//   final String? profileimg;
+
+//   const ContactWidget({
+//     required this.userName,
+//     required this.organisation,
+//     required this.location,
+//     required this.email,
+//     required this.mobile,
+//     required this.designation,
+//     required this.profileimg,
+//     Key? key,
+//   }) : super(key: key);
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Material(
+//       elevation: 5,
+//       child: Container(
+       
+//         decoration: BoxDecoration(
+//           borderRadius: BorderRadius.circular(5),
+//           boxShadow: [
+//             BoxShadow(
+//               color: const Color.fromARGB(190, 255, 255, 255).withOpacity(0.5),
+//               spreadRadius: 8,
+//               blurRadius: 30,
+//               offset: const Offset(0, 3),
+//             ),
+//           ],
+//           border: Border.all(
+//             color: const Color.fromARGB(255, 200, 195, 195),
+//             width: 2,
+//           ),
+//         ),
+//         child: Padding(
+//           padding: const EdgeInsets.fromLTRB(10,0,0,5),
+//           child: Row(
+//             crossAxisAlignment: CrossAxisAlignment.center,
+//             children: [
+//               Expanded(
+//                 flex: 1,
+//                 child: CircleAvatar(
+//                   backgroundImage: MemoryImage(
+//                     base64Decode(profileimg!),
+//                   ),
+//                   radius: 30,
+//                 ),
+//               ),
+//               Expanded(
+//                 flex: 3,
+//                 child: Padding(
+//                   padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
+//                   child: Column(
+//                     crossAxisAlignment: CrossAxisAlignment.start,
+//                     mainAxisAlignment: MainAxisAlignment.center,
+//                     children: [
+//                       Text(
+//                         userName!,
+//                         style: GoogleFonts.alata(
+//                           fontSize: 16,
+//                         ),
+//                       ),
+//                       SizedBox(height: 2),
+//                       Text(
+//                         "Organisation: $organisation",
+//                         style: GoogleFonts.alata(
+//                           fontSize: 12,
+//                           fontWeight: FontWeight.normal,
+//                         ),
+//                       ),
+//                       SizedBox(height: 1.5),
+//                       Text(
+//                         "Location: $location",
+//                         style: GoogleFonts.alata(
+//                           fontSize: 12,
+//                           color: Color.fromARGB(255, 156, 156, 155),
+//                         ),
+//                       ),
+//                       SizedBox(height: 1.5),
+//                       Text(
+//                         "Designation: $designation",
+//                         style: GoogleFonts.alata(
+//                           fontSize: 12,
+//                           color: Color.fromARGB(255, 156, 156, 155),
+//                         ),
+//                       ),
+//                     ],
+//                   ),
+//                 ),
+//               ),
+//               Expanded(
+//                 flex: 1,
+//                 child: Column(
+//                   mainAxisAlignment: MainAxisAlignment.center,
+//                   children: [
+//                     IconButton(
+//                       onPressed: () {
+//                         // Call functionality
+//                       },
+//                       icon: Icon(Icons.phone),
+//                       color: Colors.green,
+//                     ),
+//                     SizedBox(height: 10),
+//                     IconButton(
+//                       onPressed: () {
+//                         // Email functionality
+//                       },
+//                       icon: Icon(Icons.email),
+//                       color: Colors.green,
+//                     ),
+//                   ],
+//                 ),
+//               ),
+//             ],
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }
+
+
+class ContactWidget extends StatelessWidget {
   final String? userName;
   final String? organisation;
   final String? location;
@@ -179,16 +401,10 @@ class ContactWidget extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _ContactWidgetState createState() => _ContactWidgetState();
-}
-
-class _ContactWidgetState extends State<ContactWidget> {
-  @override
   Widget build(BuildContext context) {
     return Material(
       elevation: 5,
       child: Container(
-        height: 105,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(5),
           boxShadow: [
@@ -205,66 +421,55 @@ class _ContactWidgetState extends State<ContactWidget> {
           ),
         ),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10),
+          padding: const EdgeInsets.fromLTRB(10, 0, 0, 5),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Expanded(
                 flex: 1,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 7),
-                  child: CircleAvatar(
-                    backgroundImage: MemoryImage(
-                      base64Decode(widget.profileimg!),
-                    ),
-                    radius: 30,
+                child: CircleAvatar(
+                  backgroundImage: MemoryImage(
+                    base64Decode(profileimg!),
                   ),
+                  radius: 30,
                 ),
               ),
               Expanded(
-                flex: 2,
+                flex: 3,
                 child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 7, horizontal: 10),
+                  padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        widget.userName!,
+                        userName!,
                         style: GoogleFonts.alata(
-                          textStyle: const TextStyle(
-                            fontSize: 16,
-                          ),
+                          fontSize: 16,
                         ),
                       ),
                       const SizedBox(height: 2),
                       Text(
-                        "Organisation      : ${widget.organisation}",
+                        "Organisation: $organisation",
                         style: GoogleFonts.alata(
-                          textStyle: const TextStyle(
-                            fontWeight: FontWeight.normal,
-                            fontSize: 12,
-                          ),
+                          fontSize: 12,
+                          fontWeight: FontWeight.normal,
                         ),
                       ),
                       const SizedBox(height: 1.5),
                       Text(
-                        "Location               : ${widget.location}",
+                        "Location: $location",
                         style: GoogleFonts.alata(
-                          textStyle: const TextStyle(
-                            fontSize: 12,
-                            color: Color.fromARGB(255, 156, 156, 155),
-                          ),
+                          fontSize: 12,
+                          color: const Color.fromARGB(255, 156, 156, 155),
                         ),
                       ),
                       const SizedBox(height: 1.5),
                       Text(
-                        "Designation        : ${widget.designation}",
+                        "Designation: $designation",
                         style: GoogleFonts.alata(
-                          textStyle: const TextStyle(
-                            fontSize: 12,
-                            color: Color.fromARGB(255, 156, 156, 155),
-                          ),
+                          fontSize: 12,
+                          color: const Color.fromARGB(255, 156, 156, 155),
                         ),
                       ),
                     ],
@@ -273,23 +478,27 @@ class _ContactWidgetState extends State<ContactWidget> {
               ),
               Expanded(
                 flex: 1,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    IconButton(
-                      onPressed: () {
-                        // Call functionality
+                    GestureDetector(
+                      onTap: () {
+                        launch("tel:$mobile");
                       },
-                      icon: Icon(Icons.phone),
-                      color: Colors.green,
+                      child: const Icon(
+                        Icons.phone,
+                        color: Colors.green,
+                      ),
                     ),
-                    // const SizedBox(width: 10),
-                    IconButton(
-                      onPressed: () {
-                        // Email functionality
+                    const SizedBox(height: 10),
+                    GestureDetector(
+                      onTap: () {
+                        launch("mailto:$email");
                       },
-                      icon: Icon(Icons.email),
-                      color: Colors.green,
+                      child: const Icon(
+                        Icons.email,
+                        color: Colors.green,
+                      ),
                     ),
                   ],
                 ),
@@ -302,7 +511,8 @@ class _ContactWidgetState extends State<ContactWidget> {
   }
 }
 
-class MyFilterDropdown extends StatefulWidget {
+
+class MyFilterDropdown extends StatelessWidget {
   final List<String> filterData;
   final String selectedFilter;
   final ValueChanged<String?>? onChanged;
@@ -315,15 +525,9 @@ class MyFilterDropdown extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _MyFilterDropdownState createState() => _MyFilterDropdownState();
-}
-
-class _MyFilterDropdownState extends State<MyFilterDropdown> {
-  @override
   Widget build(BuildContext context) {
     return DropdownButtonHideUnderline(
       child: Container(
-        width: 150,
         height: 35,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
@@ -336,21 +540,18 @@ class _MyFilterDropdownState extends State<MyFilterDropdown> {
           ],
         ),
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
+          padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
           child: DropdownButton<String>(
-            value: widget.selectedFilter,
-            icon: Image.asset(
-              "images/filter.png",
-              width: 27,
-              height: 27,
-            ),
+            value: selectedFilter,
+            icon: const Icon(Icons.arrow_drop_down),
             iconSize: 30,
             elevation: 16,
-            style: GoogleFonts.cairo(
-              textStyle: const TextStyle(fontSize: 16),
-            ),
-            onChanged: widget.onChanged,
-            items: widget.filterData.map((String value) {
+            style: GoogleFonts.cairo(textStyle: const TextStyle(
+              color: Colors.black,
+              fontSize: 16
+            )),
+            onChanged: onChanged,
+            items: filterData.map((String value) {
               return DropdownMenuItem<String>(
                 value: value,
                 child: Padding(
