@@ -94,6 +94,18 @@ class FeedCard extends StatelessWidget {
             image!,
             fit: BoxFit.cover,
           ),
+            Padding(
+            padding: const EdgeInsets.all(10),
+            child: Text(
+              "Title of feed",
+              style: GoogleFonts.assistant(
+                textStyle: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                )
+              ),
+            ),
+          ),
           Padding(
             padding: const EdgeInsets.all(10),
             child: Text(

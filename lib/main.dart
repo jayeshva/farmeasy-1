@@ -17,9 +17,9 @@ void main() {
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
   // Delayed navigation after 5 seconds
-  Future.delayed(const Duration(seconds: 7), () {
+  Future.delayed(const Duration(seconds: 1), () {
     // Navigate to Sign in route after 5 seconds
-    navigatorKey.currentState!.pushReplacementNamed('/signin');
+    navigatorKey.currentState!.pushReplacementNamed('/dashboard');
   });
 
   runApp(MaterialApp(

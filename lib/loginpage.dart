@@ -1,6 +1,11 @@
+import 'dart:html';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MyLoginPage extends StatefulWidget {
   const MyLoginPage({Key? key}) : super(key: key);
@@ -91,7 +96,8 @@ class _LoginState extends State<MyLoginPage> {
                                           Color.fromARGB(255, 242, 242, 243),
                                       focusedBorder: OutlineInputBorder(
                                         borderSide: BorderSide(
-                                          color: Color.fromARGB(226, 0, 137, 48),
+                                          color:
+                                              Color.fromARGB(226, 0, 137, 48),
                                         ),
                                       ),
                                       border: OutlineInputBorder(),
@@ -111,12 +117,14 @@ class _LoginState extends State<MyLoginPage> {
                                           Color.fromARGB(255, 242, 242, 243),
                                       focusedBorder: OutlineInputBorder(
                                         borderSide: BorderSide(
-                                          color: Color.fromARGB(226, 0, 137, 48),
+                                          color:
+                                              Color.fromARGB(226, 0, 137, 48),
                                         ),
                                       ),
                                       border: OutlineInputBorder(
                                         borderSide: BorderSide(
-                                          color: Color.fromARGB(226, 0, 137, 48),
+                                          color:
+                                              Color.fromARGB(226, 0, 137, 48),
                                         ),
                                       ),
                                       labelText: 'Password',
@@ -129,6 +137,8 @@ class _LoginState extends State<MyLoginPage> {
                                   height: 40,
                                   child: ElevatedButton(
                                     onPressed: () {
+                                      print(_emailController.text);
+                                      print(_passwordController.text);
                                       _login();
                                     },
                                     style: ElevatedButton.styleFrom(
@@ -171,7 +181,8 @@ class _LoginState extends State<MyLoginPage> {
                                         ),
                                         recognizer: TapGestureRecognizer()
                                           ..onTap = () {
-                                            Navigator.pushNamed(context, '/signup');
+                                            Navigator.pushNamed(
+                                                context, '/signup');
                                           },
                                       ),
                                     ],
@@ -193,12 +204,57 @@ class _LoginState extends State<MyLoginPage> {
     );
   }
 
-  void _login() {
+  Future<void> _login() async {
     String email = _emailController.text.trim();
     String password = _passwordController.text.trim();
 
     if (email.isNotEmpty && _isValidEmail(email) && password.isNotEmpty) {
-      Navigator.pushNamed(context, '/dashboard');
+      try {
+        var response = await http.post(
+          Uri.parse('https://localhost:8000/login'),
+          body: {
+            'user_email': email,
+            'user_password': password,
+          },
+        );
+      
+
+        if (response.statusCode == 200) {
+          // Parse the response JSON
+          var responseData = json.decode(response.body);
+         
+
+          // // Store session data using shared_preferences
+          // SharedPreferences prefs = await SharedPreferences.getInstance();
+          // await prefs.setString('token', responseData['token']);
+          // await prefs.setString('email', email);
+
+          // Navigate to dashboard
+          Navigator.pushNamed(context, '/dashboard');
+        } else {
+          // Show alert dialog for unsuccessful login
+          // ignore: use_build_context_synchronously
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: const Text('Login Failed'),
+                content: const Text('Invalid email or password.'),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text('OK'),
+                  ),
+                ],
+              );
+            },
+          );
+        }
+      } catch (error) {
+        print('Error: $error');
+      }
     } else {
       showDialog(
         context: context,
@@ -221,8 +277,7 @@ class _LoginState extends State<MyLoginPage> {
   }
 
   bool _isValidEmail(String email) {
-    String emailPattern =
-        r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$';
+    String emailPattern = r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$';
     RegExp regex = RegExp(emailPattern);
     return regex.hasMatch(email);
   }

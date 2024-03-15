@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class MySchemes extends StatefulWidget {
   const MySchemes({super.key});
@@ -10,77 +12,59 @@ class MySchemes extends StatefulWidget {
 
 class _MySchemesState extends State<MySchemes> {
   var schemeData = [
-      {
-      'schemaName': 'Scheme 1',
-      'category': 'Category A',
-      'lastDate': '12/03/2024',
-      'updatedOn': '12/03/2024',
-      'description': 'This is a description of Scheme 1'
+    {
+      'scheme_name': 'Scheme 1',
+      'scheme_category': 'Category A',
+      'scheme_last_date': '01-01-2022',
+      'created_at': '01-01-2022',
+      'scheme_description': 'Description of scheme 1...',
     },
     {
-      'schemaName': 'Scheme 2',
-      'category': 'Category B',
-      'lastDate': '13/03/2024',
-      'updatedOn': '13/03/2024',
-      'description': 'This is a description of Scheme 2'
+      'scheme_name': 'Scheme 2',
+      'scheme_category': 'Category B',
+      'scheme_last_date': '01-01-2022',
+      'created_at': '01-01-2022',
+      'scheme_description': 'Description of scheme 2...',
     },
     {
-      'schemaName': 'Scheme 3',
-      'category': 'Category A',
-      'lastDate': '14/03/2024',
-      'updatedOn': '14/03/2024',
-      'description': 'This is a description of Scheme 3'
-    },
-    {
-      'schemaName': 'Scheme 4',
-      'category': 'Category B',
-      'lastDate': '15/03/2024',
-      'updatedOn': '15/03/2024',
-      'description': 'This is a description of Scheme 4'
-    },
-    {
-      'schemaName': 'Scheme 5',
-      'category': 'Category A',
-      'lastDate': '16/03/2024',
-      'updatedOn': '16/03/2024',
-      'description': 'This is a description of Scheme 5'
-    },
-    {
-      'schemaName': 'Scheme 6',
-      'category': 'Category B',
-      'lastDate': '17/03/2024',
-      'updatedOn': '17/03/2024',
-      'description': 'This is a description of Scheme 6'
-    },
-    {
-      'schemaName': 'Scheme 7',
-      'category': 'Category A',
-      'lastDate': '18/03/2024',
-      'updatedOn': '18/03/2024',
-      'description': 'This is a description of Scheme 7'
-    },
-    {
-      'schemaName': 'Scheme 8',
-      'category': 'Category B',
-      'lastDate': '19/03/2024',
-      'updatedOn': '19/03/2024',
-      'description': 'This is a description of Scheme 8'
-    },
-    {
-      'schemaName': 'Scheme 9',
-      'category': 'Category A',
-      'lastDate': '20/03/2024',
-      'updatedOn': '20/03/2024',
-      'description': 'This is a description of Scheme 9'
-    },
-    {
-      'schemaName': 'Scheme 10',
-      'category': 'Category B',
-      'lastDate': '21/03/2024',
-      'updatedOn': '21/03/2024',
-      'description': 'This is a description of Scheme 10'
+      'scheme_name': 'Scheme 3',
+      'scheme_category': 'Category A',
+      'last_date': '01-01-2022',
+      'created_at': '01-01-2022',
+      'scheme_description': 'Description of scheme 3...',
     }
   ];
+  @override
+  void initState() {
+    super.initState();
+    fetchSchemeData();
+  }
+
+  Future<void> fetchSchemeData() async {
+    try {
+      final response = await http
+          .get(Uri.parse('https://localhost:8000/schemes/fetchScheme'));
+      if (response.statusCode == 200) {
+        var responseData = json.decode(response.body);
+        setState(() {
+          schemeData = responseData
+              .map((scheme) => scheme as Map<String, dynamic>)
+              .toList();
+        });
+        print(responseData['data']);
+        schemeData = responseData['data'];
+        print(schemeData);
+        setState(() {
+          schemeData = responseData.map((scheme) => scheme as Map<String, String>).toList();
+        });
+      } else {
+        throw Exception('Failed to fetch scheme data');
+      }
+    } catch (error) {
+      print('Error fetching scheme data: $error');
+      // Handle error as needed
+    }
+  }
 
   List<String> filterData = [
     'All',
@@ -104,7 +88,8 @@ class _MySchemesState extends State<MySchemes> {
           title: Text(
             "Schemes",
             style: GoogleFonts.assistant(
-              textStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+              textStyle:
+                  const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
             ),
           ),
           backgroundColor: const Color(0x0000892f).withOpacity(1),
@@ -114,8 +99,7 @@ class _MySchemesState extends State<MySchemes> {
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
-              children:
-               [
+              children: [
                 Padding(
                   padding: const EdgeInsets.fromLTRB(0, 10, 20, 10),
                   child: MyFilterDropdown(
@@ -128,7 +112,6 @@ class _MySchemesState extends State<MySchemes> {
                         });
                       }
                     },
-                   
                   ),
                 ),
               ],
@@ -140,13 +123,14 @@ class _MySchemesState extends State<MySchemes> {
                   itemCount: schemeData.length,
                   itemBuilder: (context, index) {
                     final data = schemeData[index];
-                    if (_selectedFilter == 'All' || data['category'] == _selectedFilter) {
+                    if (_selectedFilter == 'All' ||
+                        data['scheme_category'] == _selectedFilter) {
                       return SchemaWidget(
-                        schemaName: data['schemaName'],
-                        category: data['category'],
-                        lastDate: data['lastDate'],
-                        updatedOn: data['updatedOn'],
-                        description: data['description'],
+                        schemaName: data['scheme_name'],
+                        category: data['scheme_category'],
+                        lastDate: data['last_date'],
+                        updatedOn: data['created_at'],
+                        description: data['scheme_description'],
                       );
                     } else {
                       return Container();
@@ -183,7 +167,7 @@ class SchemaWidget extends StatelessWidget {
     return Card(
       elevation: 5,
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(8,8,8,10),
+        padding: const EdgeInsets.fromLTRB(8, 8, 8, 10),
         child: ListTile(
           title: Text(
             schemaName!,
@@ -194,11 +178,17 @@ class SchemaWidget extends StatelessWidget {
           subtitle: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-               const SizedBox(height: 1,),
+              const SizedBox(
+                height: 1,
+              ),
               Text("Category      : $category"),
-              const SizedBox(height: 1,),
+              const SizedBox(
+                height: 1,
+              ),
               Text("Last date      : $lastDate"),
-               const SizedBox(height: 1,),
+              const SizedBox(
+                height: 1,
+              ),
               Text("Updated on  : $updatedOn"),
             ],
           ),
@@ -258,7 +248,6 @@ class SchemaWidget extends StatelessWidget {
   }
 }
 
-
 class MyFilterDropdown extends StatelessWidget {
   final List<String> filterData;
   final String selectedFilter;
@@ -293,10 +282,8 @@ class MyFilterDropdown extends StatelessWidget {
             icon: const Icon(Icons.arrow_drop_down),
             iconSize: 30,
             elevation: 16,
-            style: GoogleFonts.cairo(textStyle: const TextStyle(
-              color: Colors.black,
-              fontSize: 16
-            )),
+            style: GoogleFonts.cairo(
+                textStyle: const TextStyle(color: Colors.black, fontSize: 16)),
             onChanged: onChanged,
             items: filterData.map((String value) {
               return DropdownMenuItem<String>(

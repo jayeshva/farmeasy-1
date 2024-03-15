@@ -70,11 +70,12 @@ class _RegistrationState extends State<MyRegistrationPage> {
                                   child: const TextField(
                                     decoration: InputDecoration(
                                       filled: true,
-                                      fillColor: Color.fromARGB(
-                                          255, 242, 242, 243),
+                                      fillColor:
+                                          Color.fromARGB(255, 242, 242, 243),
                                       focusedBorder: OutlineInputBorder(
                                         borderSide: BorderSide(
-                                          color: Color.fromARGB(226, 0, 137, 48),
+                                          color:
+                                              Color.fromARGB(226, 0, 137, 48),
                                         ),
                                       ),
                                       border: OutlineInputBorder(),
@@ -88,16 +89,18 @@ class _RegistrationState extends State<MyRegistrationPage> {
                                   child: const TextField(
                                     decoration: InputDecoration(
                                       filled: true,
-                                      fillColor: Color.fromARGB(
-                                          255, 242, 242, 243),
+                                      fillColor:
+                                          Color.fromARGB(255, 242, 242, 243),
                                       focusedBorder: OutlineInputBorder(
                                         borderSide: BorderSide(
-                                          color: Color.fromARGB(226, 0, 137, 48),
+                                          color:
+                                              Color.fromARGB(226, 0, 137, 48),
                                         ),
                                       ),
                                       border: OutlineInputBorder(
                                         borderSide: BorderSide(
-                                          color: Color.fromARGB(226, 0, 137, 48),
+                                          color:
+                                              Color.fromARGB(226, 0, 137, 48),
                                         ),
                                       ),
                                       labelText: 'Email',
@@ -110,11 +113,12 @@ class _RegistrationState extends State<MyRegistrationPage> {
                                   child: const TextField(
                                     decoration: InputDecoration(
                                       filled: true,
-                                      fillColor: Color.fromARGB(
-                                          255, 242, 242, 243),
+                                      fillColor:
+                                          Color.fromARGB(255, 242, 242, 243),
                                       focusedBorder: OutlineInputBorder(
                                         borderSide: BorderSide(
-                                          color: Color.fromARGB(226, 0, 137, 48),
+                                          color:
+                                              Color.fromARGB(226, 0, 137, 48),
                                         ),
                                       ),
                                       border: OutlineInputBorder(),
@@ -128,16 +132,18 @@ class _RegistrationState extends State<MyRegistrationPage> {
                                   child: const TextField(
                                     decoration: InputDecoration(
                                       filled: true,
-                                      fillColor: Color.fromARGB(
-                                          255, 242, 242, 243),
+                                      fillColor:
+                                          Color.fromARGB(255, 242, 242, 243),
                                       focusedBorder: OutlineInputBorder(
                                         borderSide: BorderSide(
-                                          color: Color.fromARGB(226, 0, 137, 48),
+                                          color:
+                                              Color.fromARGB(226, 0, 137, 48),
                                         ),
                                       ),
                                       border: OutlineInputBorder(
                                         borderSide: BorderSide(
-                                          color: Color.fromARGB(226, 0, 137, 48),
+                                          color:
+                                              Color.fromARGB(226, 0, 137, 48),
                                         ),
                                       ),
                                       labelText: 'Gender',
@@ -150,11 +156,12 @@ class _RegistrationState extends State<MyRegistrationPage> {
                                   child: const TextField(
                                     decoration: InputDecoration(
                                       filled: true,
-                                      fillColor: Color.fromARGB(
-                                          255, 242, 242, 243),
+                                      fillColor:
+                                          Color.fromARGB(255, 242, 242, 243),
                                       focusedBorder: OutlineInputBorder(
                                         borderSide: BorderSide(
-                                          color: Color.fromARGB(226, 0, 137, 48),
+                                          color:
+                                              Color.fromARGB(226, 0, 137, 48),
                                         ),
                                       ),
                                       border: OutlineInputBorder(),
@@ -168,16 +175,18 @@ class _RegistrationState extends State<MyRegistrationPage> {
                                   child: const TextField(
                                     decoration: InputDecoration(
                                       filled: true,
-                                      fillColor: Color.fromARGB(
-                                          255, 242, 242, 243),
+                                      fillColor:
+                                          Color.fromARGB(255, 242, 242, 243),
                                       focusedBorder: OutlineInputBorder(
                                         borderSide: BorderSide(
-                                          color: Color.fromARGB(226, 0, 137, 48),
+                                          color:
+                                              Color.fromARGB(226, 0, 137, 48),
                                         ),
                                       ),
                                       border: OutlineInputBorder(
                                         borderSide: BorderSide(
-                                          color: Color.fromARGB(226, 0, 137, 48),
+                                          color:
+                                              Color.fromARGB(226, 0, 137, 48),
                                         ),
                                       ),
                                       labelText: 'Aadhaar',
@@ -195,7 +204,7 @@ class _RegistrationState extends State<MyRegistrationPage> {
                                           // Handle file upload button tap here
                                         },
                                         child: const Text(
-                                          'Upload Aadhar',
+                                          'Upload Aadhaar',
                                           style: TextStyle(fontSize: 14),
                                         ),
                                       ),
@@ -209,6 +218,19 @@ class _RegistrationState extends State<MyRegistrationPage> {
                                         },
                                         child: const Text(
                                           'Upload PAN',
+                                          style: TextStyle(fontSize: 14),
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 10),
+                                    SizedBox(
+                                      height: 40,
+                                      child: ElevatedButton(
+                                        onPressed: () {
+                                          // Handle file upload button tap here
+                                        },
+                                        child: const Text(
+                                          'Upload Photo',
                                           style: TextStyle(fontSize: 14),
                                         ),
                                       ),
