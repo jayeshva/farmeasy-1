@@ -1,4 +1,3 @@
-import 'dart:html';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -211,7 +210,7 @@ class _LoginState extends State<MyLoginPage> {
     if (email.isNotEmpty && _isValidEmail(email) && password.isNotEmpty) {
       try {
         var response = await http.post(
-          Uri.parse('https://localhost:8000/login'),
+          Uri.parse('https://code.jayworks.tech:8000/login'),
           body: {
             'user_email': email,
             'user_password': password,

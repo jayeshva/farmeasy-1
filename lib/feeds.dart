@@ -2,6 +2,10 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+String url = "https://code.jayworks.tech:8000";
 
 class MyFeeds extends StatefulWidget {
   const MyFeeds({Key? key}) : super(key: key);
@@ -11,7 +15,7 @@ class MyFeeds extends StatefulWidget {
 }
 
 class _MyFeedsState extends State<MyFeeds> {
-  List<Map<String, dynamic>> feeds = [];
+  List<dynamic> feedData = [];
 
   @override
   void initState() {
@@ -20,20 +24,25 @@ class _MyFeedsState extends State<MyFeeds> {
   }
 
   Future<void> fetchFeeds() async {
-    final response = await http.get(Uri.parse('https://picsum.photos/v2/list'));
+    final response = await http.get(Uri.parse('$url/feeds/getFeeds'));
     if (response.statusCode == 200) {
-      final List<dynamic> responseData = jsonDecode(response.body);
+      var responseData = jsonDecode(response.body);
+      var finalData = responseData['data'];
+      finalData.forEach((data) {
+        var createdAt = DateTime.parse(data['created_at']);
+        data['post_date'] = DateFormat('dd-MM-yyyy').format(createdAt);
+      });
+
       setState(() {
-        feeds = responseData
-            .map((item) => {
-                  'image': item['download_url'],
-                  'description': 'Description of feed...',
-                })
-            .toList();
+        feedData = finalData;
       });
     } else {
       throw Exception('Failed to load feeds');
     }
+  }
+
+  Future<void> _refreshFeeds() async {
+    await fetchFeeds();
   }
 
   @override
@@ -57,20 +66,26 @@ class _MyFeedsState extends State<MyFeeds> {
           backgroundColor: const Color(0x0000892f).withOpacity(1),
           centerTitle: true,
         ),
-        body: feeds.isEmpty
-            ? Center(child: CircularProgressIndicator())
-            : SingleChildScrollView(
-                physics: AlwaysScrollableScrollPhysics(),
-                child: Column(
-                  children: [
-                    for (var feed in feeds)
-                      FeedCard(
-                        image: feed['image'],
-                        description: feed['description'],
-                      ),
-                  ],
+        body: RefreshIndicator(
+          onRefresh: _refreshFeeds,
+          child: feedData.isEmpty
+              ? const Center(child: CircularProgressIndicator())
+              : SingleChildScrollView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  child: Column(
+                    children: feedData.map((data) {
+                      return FeedCard(
+                        // Check for null values before passing them to FeedCard
+                        image: data['feed_img'] ?? '',
+                        title: data['feed_name'] ?? '',
+                        description: data['feed_description'] ?? '',
+                        source_url: data['feed_source_url'] ?? '',
+                        postDate: data['post_date'] ?? '',
+                      );
+                    }).toList(),
+                  ),
                 ),
-              ),
+        ),
       ),
     );
   }
@@ -78,9 +93,19 @@ class _MyFeedsState extends State<MyFeeds> {
 
 class FeedCard extends StatelessWidget {
   final String? image;
+  final String? title;
   final String? description;
+  final String? source_url;
+  final String? postDate;
 
-  const FeedCard({Key? key, this.image, this.description}) : super(key: key);
+  const FeedCard(
+      {Key? key,
+      this.image,
+      this.title,
+      this.description,
+      this.source_url,
+      this.postDate})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -91,30 +116,46 @@ class FeedCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Image.network(
-            image!,
+            url + image!,
             fit: BoxFit.cover,
           ),
-            Padding(
-            padding: const EdgeInsets.all(10),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(8, 8, 0, 0),
             child: Text(
-              "Title of feed",
+              "Posted at: " + postDate!,
               style: GoogleFonts.assistant(
                 textStyle: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
-                )
+                  color: Colors.grey,
+                  fontSize: 13,
+                ),
               ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(8, 8, 0, 0),
+            child: Text(
+              title!,
+              style: GoogleFonts.assistant(
+                  textStyle: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+              )),
             ),
           ),
           Padding(
             padding: const EdgeInsets.all(10),
             child: Text(
               description!,
-              style: GoogleFonts.assistant(),
+              style: GoogleFonts.assistant(
+                textStyle: const TextStyle(
+                  fontSize: 14,
+                ),
+              ),
             ),
           ),
           ElevatedButton(
             onPressed: () {
+              launchUrl(Uri.parse(source_url!));
               // Handle "View More" button tap
             },
             style: ElevatedButton.styleFrom(

@@ -10,6 +10,7 @@ import 'package:farmeasy/registerpage.dart';
 import 'package:farmeasy/splashpage.dart';
 
 void main() {
+  
   WidgetsFlutterBinding
       .ensureInitialized(); // Ensure that Flutter is initialized
 
@@ -19,7 +20,7 @@ void main() {
   // Delayed navigation after 5 seconds
   Future.delayed(const Duration(seconds: 1), () {
     // Navigate to Sign in route after 5 seconds
-    navigatorKey.currentState!.pushReplacementNamed('/dashboard');
+    navigatorKey.currentState!.pushReplacementNamed('/signin');
   });
 
   runApp(MaterialApp(

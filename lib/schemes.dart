@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:intl/intl.dart';
+
+
+String url = 'https://code.jayworks.tech:8000';
 
 class MySchemes extends StatefulWidget {
   const MySchemes({super.key});
@@ -9,54 +13,48 @@ class MySchemes extends StatefulWidget {
   @override
   State<MySchemes> createState() => _MySchemesState();
 }
-
 class _MySchemesState extends State<MySchemes> {
-  var schemeData = [
-    {
-      'scheme_name': 'Scheme 1',
-      'scheme_category': 'Category A',
-      'scheme_last_date': '01-01-2022',
-      'created_at': '01-01-2022',
-      'scheme_description': 'Description of scheme 1...',
-    },
-    {
-      'scheme_name': 'Scheme 2',
-      'scheme_category': 'Category B',
-      'scheme_last_date': '01-01-2022',
-      'created_at': '01-01-2022',
-      'scheme_description': 'Description of scheme 2...',
-    },
-    {
-      'scheme_name': 'Scheme 3',
-      'scheme_category': 'Category A',
-      'last_date': '01-01-2022',
-      'created_at': '01-01-2022',
-      'scheme_description': 'Description of scheme 3...',
-    }
-  ];
+  List<dynamic>? schemeData; // Initialize schemeData as a list
   @override
   void initState() {
     super.initState();
     fetchSchemeData();
   }
 
+  List<String> filterData=['All']; // Initialize filterData with 'All' as the first item;
+
+  String _selectedFilter = 'All';
+
   Future<void> fetchSchemeData() async {
     try {
-      final response = await http
-          .get(Uri.parse('https://localhost:8000/schemes/fetchScheme'));
+      final response =
+          await http.get(Uri.parse('$url/schemes/getScheme'));
       if (response.statusCode == 200) {
         var responseData = json.decode(response.body);
-        setState(() {
-          schemeData = responseData
-              .map((scheme) => scheme as Map<String, dynamic>)
-              .toList();
+        var schemes = responseData['data'];
+        // Extract unique categories
+        Set<String> uniqueCategories = Set();
+        schemes.forEach((scheme) {
+          uniqueCategories.add(scheme['scheme_category']);
         });
-        print(responseData['data']);
-        schemeData = responseData['data'];
-        print(schemeData);
-        setState(() {
-          schemeData = responseData.map((scheme) => scheme as Map<String, String>).toList();
+
+        // Convert set to list for dropdown items
+       filterData = ['All', ...uniqueCategories.toList()];
+        schemes.forEach((scheme) {
+          var lastDate = scheme['last_date'] != null
+              ? DateTime.parse(scheme['last_date'])
+              : null; // Convert 'last_date' string to DateTime or null if it's null
+          var createdAt = DateTime.parse(scheme['created_at']);
+          scheme['slast_date'] = lastDate != null
+              ? DateFormat('dd-MM-yyyy').format(lastDate)
+              : 'N/A'; // Format 'last_date' or provide a default value if it's null
+          scheme['screated_at'] = DateFormat('dd-MM-yyyy').format(createdAt);
         });
+
+        setState(() {
+          schemeData = schemes;
+        });
+
       } else {
         throw Exception('Failed to fetch scheme data');
       }
@@ -66,13 +64,10 @@ class _MySchemesState extends State<MySchemes> {
     }
   }
 
-  List<String> filterData = [
-    'All',
-    'Category A',
-    'Category B',
-  ];
-
-  String _selectedFilter = 'All';
+  Future<void> _refreshData() async {
+    // Call fetchSchemeData to refresh data
+    await fetchSchemeData();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -95,51 +90,61 @@ class _MySchemesState extends State<MySchemes> {
           backgroundColor: const Color(0x0000892f).withOpacity(1),
           centerTitle: true,
         ),
-        body: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 10, 20, 10),
-                  child: MyFilterDropdown(
-                    filterData: filterData,
-                    selectedFilter: _selectedFilter,
-                    onChanged: (String? newValue) {
-                      if (newValue != null) {
-                        setState(() {
-                          _selectedFilter = newValue;
-                        });
-                      }
-                    },
+        body: RefreshIndicator(
+          onRefresh: _refreshData,
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 10, 20, 10),
+                    child: MyFilterDropdown(
+                      filterData: filterData,
+                      selectedFilter: _selectedFilter,
+                      onChanged: (String? newValue) {
+                        if (newValue != null) {
+                          setState(() {
+                            _selectedFilter = newValue;
+                          });
+                        }
+                      },
+                    ),
                   ),
-                ),
-              ],
-            ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: ListView.builder(
-                  itemCount: schemeData.length,
-                  itemBuilder: (context, index) {
-                    final data = schemeData[index];
-                    if (_selectedFilter == 'All' ||
-                        data['scheme_category'] == _selectedFilter) {
-                      return SchemaWidget(
-                        schemaName: data['scheme_name'],
-                        category: data['scheme_category'],
-                        lastDate: data['last_date'],
-                        updatedOn: data['created_at'],
-                        description: data['scheme_description'],
-                      );
-                    } else {
-                      return Container();
-                    }
-                  },
+                ],
+              ),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: schemeData == null
+                      ? const Center(child: CircularProgressIndicator())
+                      : schemeData!.isEmpty
+                          ? const Center(child: Text('No schemes available'))
+                          : ListView.builder(
+                              itemCount: schemeData!.length,
+                              itemBuilder: (context, index) {
+                                final data = schemeData![index];
+                                // Filter schemes based on selected category
+                                if (_selectedFilter == 'All' ||
+                                    data['scheme_category'] ==
+                                        _selectedFilter) {
+                                  return SchemaWidget(
+                                    // Pass scheme data to SchemaWidget
+                                    schemaName: data['scheme_name'],
+                                    category: data['scheme_category'],
+                                    lastDate: data['slast_date'],
+                                    updatedOn: data['screated_at'],
+                                    description: data['scheme_description'],
+                                  );
+                                } else {
+                                  return Container(); // Return empty container if scheme does not match selected category
+                                }
+                              },
+                            ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -203,7 +208,7 @@ class SchemaWidget extends StatelessWidget {
               ),
             ),
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(2, 0, 0, 5),
+              padding: const EdgeInsets.fromLTRB(2, 7, 0, 10),
               child: Text(
                 "Apply",
                 style: GoogleFonts.alata(
