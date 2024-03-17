@@ -483,38 +483,52 @@ class _RegistrationState extends State<MyRegistrationPage> {
                                   width: 110,
                                   height: 40,
                                   child: ElevatedButton(
-                                    onPressed: () {
-                                      registerUser(
-                                        name: _nameController.text,
-                                        email: _emailController.text,
-                                        phone: _phoneController.text,
-                                        gender: _genderController.text,
-                                        password: _passwordController.text,
-                                        aadhaarFilePath: aadhaarFilePath,
-                                        panFilePath: panFilePath,
-                                        photoFilePath: photoFilePath,
-                                      );
-                                    },
+                                    onPressed: isLoading
+                                        ? null
+                                        : () {
+                                            setState(() {
+                                              isLoading =
+                                                  true; // Set loading state to true
+                                            });
+                                            registerUser(
+                                              name: _nameController.text,
+                                              email: _emailController.text,
+                                              phone: _phoneController.text,
+                                              gender: _genderController.text,
+                                              password:
+                                                  _passwordController.text,
+                                              aadhaarFilePath: aadhaarFilePath,
+                                              panFilePath: panFilePath,
+                                              photoFilePath: photoFilePath,
+                                            ).then((_) {
+                                              setState(() {
+                                                isLoading =
+                                                    false; // Set loading state to false
+                                              });
+                                            });
+                                          },
                                     style: ElevatedButton.styleFrom(
-                                      backgroundColor:
-                                          const Color.fromARGB(226, 0, 137, 48),
+                                      backgroundColor: isLoading
+                                          ? Colors.grey
+                                          : const Color.fromARGB(
+                                              226, 0, 137, 48),
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(10),
                                       ),
                                     ),
-                                    child: Text(
-                                      "Sign up",
-                                      style: GoogleFonts.bentham(
-                                        textStyle: const TextStyle(
-                                          fontSize: 20,
-                                        ),
-                                      ),
-                                    ),
+                                    child: isLoading
+                                        ? CircularProgressIndicator() // Show loading animation
+                                        : Text(
+                                            "Sign up",
+                                            style: GoogleFonts.bentham(
+                                              textStyle: const TextStyle(
+                                                fontSize: 20,
+                                              ),
+                                            ),
+                                          ),
                                   ),
                                 ),
 
-                              
-                               
                                 const SizedBox(
                                   height: 20,
                                 ),
