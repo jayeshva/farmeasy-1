@@ -1,9 +1,16 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:intl/intl.dart';
-
+import 'dart:html';
+import 'package:intl/intl_standalone.dart';
+import 'package:farmeasy/providers/userProvider.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 String url = 'https://code.jayworks.tech:8000';
 
@@ -13,6 +20,7 @@ class MySchemes extends StatefulWidget {
   @override
   State<MySchemes> createState() => _MySchemesState();
 }
+
 class _MySchemesState extends State<MySchemes> {
   List<dynamic>? schemeData; // Initialize schemeData as a list
   @override
@@ -21,14 +29,20 @@ class _MySchemesState extends State<MySchemes> {
     fetchSchemeData();
   }
 
-  List<String> filterData=['All']; // Initialize filterData with 'All' as the first item;
+  List<String> filterData = [
+    'All'
+  ]; // Initialize filterData with 'All' as the first item;
 
   String _selectedFilter = 'All';
 
   Future<void> fetchSchemeData() async {
     try {
+      var token = Provider.of<UserProvider>(context, listen: false).user.token;
+       var email = Provider.of<UserProvider>(context, listen: false).user.email;
       final response =
-          await http.get(Uri.parse('$url/schemes/getScheme'));
+          await http.get(Uri.parse('$url/schemes/getScheme'), headers: {
+        'x-auth-token': token,
+      });
       if (response.statusCode == 200) {
         var responseData = json.decode(response.body);
         var schemes = responseData['data'];
@@ -36,10 +50,11 @@ class _MySchemesState extends State<MySchemes> {
         Set<String> uniqueCategories = Set();
         schemes.forEach((scheme) {
           uniqueCategories.add(scheme['scheme_category']);
+          
         });
 
         // Convert set to list for dropdown items
-       filterData = ['All', ...uniqueCategories.toList()];
+        filterData = ['All', ...uniqueCategories.toList()];
         schemes.forEach((scheme) {
           var lastDate = scheme['last_date'] != null
               ? DateTime.parse(scheme['last_date'])
@@ -54,7 +69,6 @@ class _MySchemesState extends State<MySchemes> {
         setState(() {
           schemeData = schemes;
         });
-
       } else {
         throw Exception('Failed to fetch scheme data');
       }
@@ -71,6 +85,8 @@ class _MySchemesState extends State<MySchemes> {
 
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<UserProvider>(context).user;
+
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
@@ -130,6 +146,7 @@ class _MySchemesState extends State<MySchemes> {
                                         _selectedFilter) {
                                   return SchemaWidget(
                                     // Pass scheme data to SchemaWidget
+                                    schema_id: data['scheme_id'],
                                     schemaName: data['scheme_name'],
                                     category: data['scheme_category'],
                                     lastDate: data['slast_date'],
@@ -152,13 +169,16 @@ class _MySchemesState extends State<MySchemes> {
 }
 
 class SchemaWidget extends StatelessWidget {
+  final String? schema_id;
   final String? schemaName;
   final String? category;
   final String? lastDate;
   final String? updatedOn;
   final String? description;
 
+
   const SchemaWidget({
+    required this.schema_id,
     required this.schemaName,
     required this.category,
     required this.lastDate,
@@ -199,7 +219,7 @@ class SchemaWidget extends StatelessWidget {
           ),
           trailing: ElevatedButton(
             onPressed: () {
-              _showApplyPopup(context, description!);
+              _showApplyPopup(context, description!, schema_id!);
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color.fromARGB(226, 0, 137, 48),
@@ -210,7 +230,7 @@ class SchemaWidget extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.fromLTRB(2, 7, 0, 10),
               child: Text(
-                "Apply",
+                'Apply',
                 style: GoogleFonts.alata(
                   textStyle: const TextStyle(fontSize: 15),
                 ),
@@ -222,7 +242,60 @@ class SchemaWidget extends StatelessWidget {
     );
   }
 
-  void _showApplyPopup(BuildContext context, String description) {
+  void applyScheme(String schema_id) async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('x-auth-token');
+      final response = await http.post(
+        Uri.parse('$url/schemes/applyScheme'),
+        headers: {
+          'x-auth-token': token!,
+        },
+        body: {
+          'schema_id': schema_id,
+        },
+      );
+      if (response.statusCode == 200) {
+        var responseData = json.decode(response.body);
+        print(responseData);
+        Fluttertoast.showToast(
+            msg: "Scheme Applied successfully!",
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.SNACKBAR,
+            backgroundColor: Colors.green,
+            textColor: Colors.white,
+            timeInSecForIosWeb: 4);
+        // Handle response as needed
+      } else if (response.statusCode == 400) {
+        var responseData = json.decode(response.body);
+        print(responseData);
+        Fluttertoast.showToast(
+            msg: "Scheme already applied!",
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.SNACKBAR,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            timeInSecForIosWeb: 4);
+      } else {
+        var responseData = json.decode(response.body);
+        print(responseData);
+        Fluttertoast.showToast(
+          msg: "Something Went Wrong!",
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.SNACKBAR,
+          backgroundColor: Colors.green,
+          textColor: Colors.white,
+        );
+        throw Exception('Failed to apply for scheme');
+      }
+    } catch (error) {
+      print('Error applying for scheme: $error');
+      // Handle error as needed
+    }
+  }
+
+  void _showApplyPopup(
+      BuildContext context, String description, String schema_id) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -238,7 +311,8 @@ class SchemaWidget extends StatelessWidget {
             ),
             ElevatedButton(
               onPressed: () {
-                // Handle applying for the scheme
+                applyScheme(schema_id);
+
                 Navigator.of(context).pop();
               },
               style: ElevatedButton.styleFrom(

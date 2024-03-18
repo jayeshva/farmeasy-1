@@ -1,10 +1,12 @@
 import 'dart:convert';
+import 'package:farmeasy/providers/userProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
-
+import 'package:intl/intl_standalone.dart';
 String url = "https://code.jayworks.tech:8000";
 
 class MyFeeds extends StatefulWidget {
@@ -24,6 +26,8 @@ class _MyFeedsState extends State<MyFeeds> {
   }
 
   Future<void> fetchFeeds() async {
+      var token = Provider.of<UserProvider>(context, listen: false).user.token;
+
     final response = await http.get(Uri.parse('$url/feeds/getFeeds'));
     if (response.statusCode == 200) {
       var responseData = jsonDecode(response.body);
@@ -44,6 +48,7 @@ class _MyFeedsState extends State<MyFeeds> {
   Future<void> _refreshFeeds() async {
     await fetchFeeds();
   }
+  
 
   @override
   Widget build(BuildContext context) {
@@ -90,7 +95,13 @@ class _MyFeedsState extends State<MyFeeds> {
     );
   }
 }
-
+ void _launchURL(String url) async {
+  if (await canLaunchUrl(Uri.parse(url))) {
+    await launchUrl(Uri.parse(url));
+  } else {
+    throw 'Could not launch $url';
+  }
+}
 class FeedCard extends StatelessWidget {
   final String? image;
   final String? title;
@@ -155,7 +166,7 @@ class FeedCard extends StatelessWidget {
           ),
           ElevatedButton(
             onPressed: () {
-              launchUrl(Uri.parse(source_url!));
+              _launchURL(source_url!);
               // Handle "View More" button tap
             },
             style: ElevatedButton.styleFrom(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:intl/intl_standalone.dart';
 class MyDashboard extends StatelessWidget {
   const MyDashboard({Key? key});
 
@@ -219,6 +220,19 @@ class MyDashboard extends StatelessWidget {
     );
   }
 
+void logout(BuildContext context) async {
+  try {
+    // Clear JWT token from shared preferences
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove('x-auth-token');
+    
+    // Navigate to login screen or any other appropriate screen
+    Navigator.pushNamed(context, '/signin');
+  } catch (error) {
+    print('Error during logout: $error');
+    // Handle error, if any
+  }
+}
   void _showLogoutConfirmationDialog(BuildContext context) {
     showDialog(
       context: context,
@@ -235,8 +249,7 @@ class MyDashboard extends StatelessWidget {
             ),
             TextButton(
               onPressed: () {
-                // Perform log out actions here
-                Navigator.pushNamed(context, '/signin');
+                logout(context);
               },
               child: Text("Log Out"),
             ),

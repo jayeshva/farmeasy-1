@@ -1,11 +1,13 @@
+import 'package:farmeasy/providers/userProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'dart:convert';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:intl/intl.dart';
-
+import 'package:intl/intl_standalone.dart';
 var url = "https://code.jayworks.tech:8000";
 
 class MyContact extends StatefulWidget {
@@ -30,8 +32,11 @@ class _MyContactState extends State<MyContact> {
 
   Future<void> fetchContactData() async {
     try {
+    var token = Provider.of<UserProvider>(context, listen: false).user.token;
+
       final response = await http
-          .get(Uri.parse('$url/contacts/getContacts'));
+          .get(Uri.parse('$url/contacts/getContacts'),
+              headers: {'x-auth-token': token});
       if (response.statusCode == 200) {
         var responseData = json.decode(response.body);
         // Extract unique localities for filters

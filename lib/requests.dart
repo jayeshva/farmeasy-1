@@ -1,5 +1,14 @@
+import 'dart:convert';
+import 'package:intl/intl_standalone.dart';
+import 'package:farmeasy/providers/userProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
+import 'package:intl/intl_standalone.dart';
+import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
+
+String url = 'https://code.jayworks.tech:8000';
 
 class MyRequests extends StatefulWidget {
   const MyRequests({Key? key}) : super(key: key);
@@ -9,73 +18,73 @@ class MyRequests extends StatefulWidget {
 }
 
 class _MyRequestsState extends State<MyRequests> {
-  var requestData = [
-      {
-      'schemaName': 'Scheme 1',
-      'tracker_id': '1234567890',
-      'subsidy_id': '0987654321',
-      'applied_on': '13/03/2024',
-      'status': "Rejected",
-      'comments': "Trygdfhgjhghghjghjfghjghghfghgshdfsfdgsfgfdgdfg again"
-    },
-    {
-      'schemaName': 'Scheme 2',
-      'tracker_id': '1234567890',
-      'subsidy_id': '0987654321',
-      'applied_on': '13/03/2024',
-      'status': "Approved",
-      'comments': "successfully Approved"
-    },
-    {
-      'schemaName': 'Scheme 3',
-      'tracker_id': '1234567890',
-      'subsidy_id': '0987654321',
-      'applied_on': '13/03/2024',
-      'status': "Under Review",
-      'comments': "Wait a week"
-    },
-    {
-      'schemaName': 'Scheme 1',
-      'tracker_id': '1234567890',
-      'subsidy_id': '0987654321',
-      'applied_on': '13/03/2024',
-      'status': "Rejected",
-      'comments': "Try again"
-    },
-    {
-      'schemaName': 'Scheme 2',
-      'tracker_id': '1234567890',
-      'subsidy_id': '0987654321',
-      'applied_on': '13/03/2024',
-      'status': "Approved",
-      'comments': "successfully Approved"
-    },
-    {
-      'schemaName': 'Scheme 3',
-      'tracker_id': '1234567890',
-      'subsidy_id': '0987654321',
-      'applied_on': '13/03/2024',
-      'status': "Under Review",
-      'comments': "Wait a week"
-    }
-  ];
+  List<dynamic>? requestData; // Initialize requestData as a list
+  bool isLoading = true; // Track whether data is loading or not
+
+  @override
+  void initState() {
+    super.initState();
+    fetchSchemeData();
+  }
+
   List<String> filterData = ['All', 'Approved', 'Rejected', 'Under Review'];
 
+  Future<void> fetchSchemeData() async {
+    try {
+      var token = Provider.of<UserProvider>(context, listen: false).user.token;
+      final response = await http.get(
+        Uri.parse('$url/schemes/tracker'),
+        headers: {
+          'x-auth-token': token,
+        },
+      );
+      if (response.statusCode == 200) {
+        var responseData = json.decode(response.body);
+        var schemes = responseData['data'];
+
+        schemes.forEach((scheme) {
+          var createdAt = DateTime.parse(scheme['created_at']);
+          scheme['screated_at'] = DateFormat('dd-MM-yyyy').format(createdAt);
+        });
+
+        setState(() {
+          requestData = schemes;
+          isLoading = false; // Set loading to false after data is fetched
+        });
+      } else {
+        throw Exception('Failed to fetch scheme data');
+      }
+    } catch (error) {
+      print('Error fetching scheme data: $error');
+      // Handle error as needed
+    }
+  }
+
   String _selectedFilter = 'All';
+
+  Future<void> _refreshData() async {
+    setState(() {
+      isLoading = true;
+    });
+    await fetchSchemeData();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
           leading: IconButton(
-              onPressed: () {
-                Navigator.pushNamed(context, "/dashboard");
-              },
-              icon: const Icon(Icons.arrow_back)),
+            onPressed: () {
+              Navigator.pushNamed(context, "/dashboard");
+            },
+            icon: const Icon(Icons.arrow_back),
+          ),
           title: Text(
             "My Requests",
             style: GoogleFonts.assistant(
-              textStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 21),
+              textStyle:
+                  const TextStyle(fontWeight: FontWeight.bold, fontSize: 21),
             ),
           ),
           backgroundColor: const Color(0x0000892f).withOpacity(1),
@@ -107,23 +116,31 @@ class _MyRequestsState extends State<MyRequests> {
               ),
               const SizedBox(height: 20),
               Expanded(
-                child: ListView.builder(
-                  itemCount: requestData.length,
-                  itemBuilder: (context, index) {
-                    final data = requestData[index];
-                    if (_selectedFilter == 'All' || data['status'] == _selectedFilter) {
-                      return RequestWidget(
-                        schemaName: data['schemaName'],
-                        tracker_id: data['tracker_id'],
-                        subsidy_id: data['subsidy_id'],
-                        review_status: data['status'],
-                        review_comments: data['comments'],
-                        applied_on: data['applied_on'],
-                      );
-                    } else {
-                      return Container();
-                    }
-                  },
+                child: RefreshIndicator(
+                  onRefresh: _refreshData,
+                  child: isLoading
+                      ? Center(
+                          child: CircularProgressIndicator(),
+                        ) // Show loading indicator
+                      : ListView.builder(
+                          itemCount: requestData?.length,
+                          itemBuilder: (context, index) {
+                            final data = requestData?[index];
+                            if (_selectedFilter == 'All' ||
+                                data['status'] == _selectedFilter) {
+                              return RequestWidget(
+                                schemaName: data['scheme_name'],
+                                subsidy_id: data['scheme_id'],
+                                scheme_category: data['scheme_category'],
+                                review_status: data['status'],
+                                review_comments: data['comment'],
+                                applied_on: data['screated_at'],
+                              );
+                            } else {
+                              return Container();
+                            }
+                          },
+                        ),
                 ),
               ),
             ],
@@ -136,7 +153,7 @@ class _MyRequestsState extends State<MyRequests> {
 
 class RequestWidget extends StatelessWidget {
   final String? schemaName;
-  final String? tracker_id;
+  final String? scheme_category;
   final String? subsidy_id;
   final String? review_status;
   final String? review_comments;
@@ -144,7 +161,7 @@ class RequestWidget extends StatelessWidget {
 
   const RequestWidget({
     required this.schemaName,
-    required this.tracker_id,
+    required this.scheme_category,
     required this.subsidy_id,
     required this.review_status,
     required this.applied_on,
@@ -174,35 +191,35 @@ class RequestWidget extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-          Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    schemaName!,
-                    style: GoogleFonts.alata(fontSize: 16),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  schemaName!,
+                  style: GoogleFonts.alata(fontSize: 16),
+                ),
+                const SizedBox(height: 5),
+                Text(
+                  "Scheme id      : $subsidy_id",
+                  style: GoogleFonts.alata(fontSize: 12),
+                ),
+                Text(
+                  "Scheme category     : $scheme_category",
+                  style: GoogleFonts.alata(
+                    fontSize: 12,
+                    color: Colors.grey,
                   ),
-                  const SizedBox(height: 5),
-                  Text(
-                    "Tracker id      : $tracker_id",
-                    style: GoogleFonts.alata(fontSize: 12),
+                ),
+                Text(
+                  "Applied on      : $applied_on",
+                  style: GoogleFonts.alata(
+                    fontSize: 12,
+                    color: Colors.grey,
                   ),
-                  Text(
-                    "Subsidy id      : $subsidy_id",
-                    style: GoogleFonts.alata(
-                      fontSize: 12,
-                      color: Colors.grey,
-                    ),
-                  ),
-                  Text(
-                    "Applied on      : $applied_on",
-                    style: GoogleFonts.alata(
-                      fontSize: 12,
-                      color: Colors.grey,
-                    ),
-                  ),
-                ],
-              ),
-            const SizedBox(width: 20),
+                ),
+              ],
+            ),
+            const SizedBox(width: 50),
             Expanded(
               flex: 2,
               child: Column(
@@ -210,7 +227,7 @@ class RequestWidget extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      Text( 
+                      Text(
                         "Status : ",
                         style: GoogleFonts.alata(
                           color: Colors.black,
@@ -249,8 +266,6 @@ class RequestWidget extends StatelessWidget {
   }
 }
 
-
-
 class MyFilterDropdown extends StatelessWidget {
   final List<String> filterData;
   final String selectedFilter;
@@ -285,10 +300,8 @@ class MyFilterDropdown extends StatelessWidget {
             icon: const Icon(Icons.arrow_drop_down),
             iconSize: 30,
             elevation: 16,
-            style: GoogleFonts.cairo(textStyle: TextStyle(
-              color: Colors.black,
-              fontSize: 16
-            )),
+            style: GoogleFonts.cairo(
+                textStyle: TextStyle(color: Colors.black, fontSize: 16)),
             onChanged: onChanged,
             items: filterData.map((String value) {
               return DropdownMenuItem<String>(

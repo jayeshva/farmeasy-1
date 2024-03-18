@@ -1,8 +1,12 @@
-
+import 'dart:html';
+import 'package:intl/intl_standalone.dart';
+import 'package:farmeasy/models/user.dart';
+import 'package:farmeasy/providers/userProvider.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -17,6 +21,7 @@ class _LoginState extends State<MyLoginPage> {
   static const double textFieldHeight = 50;
   late TextEditingController _emailController;
   late TextEditingController _passwordController;
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -135,11 +140,20 @@ class _LoginState extends State<MyLoginPage> {
                                   width: 100,
                                   height: 40,
                                   child: ElevatedButton(
-                                    onPressed: () {
-                                      print(_emailController.text);
-                                      print(_passwordController.text);
-                                      _login();
-                                    },
+                                    onPressed: isLoading
+                                        ? null
+                                        : () {
+                                            setState(() {
+                                              isLoading =
+                                                  true; // Set loading state to true
+                                            });
+                                            _login().then((_) {
+                                              setState(() {
+                                                isLoading =
+                                                    false; // Set loading state to false
+                                              });
+                                            });
+                                          },
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor:
                                           const Color.fromARGB(226, 0, 137, 48),
@@ -147,14 +161,16 @@ class _LoginState extends State<MyLoginPage> {
                                         borderRadius: BorderRadius.circular(10),
                                       ),
                                     ),
-                                    child: Text(
-                                      "Sign in",
-                                      style: GoogleFonts.bentham(
-                                        textStyle: const TextStyle(
-                                          fontSize: 20,
-                                        ),
-                                      ),
-                                    ),
+                                    child: isLoading
+                                        ? CircularProgressIndicator()
+                                        : Text(
+                                            "Sign in",
+                                            style: GoogleFonts.bentham(
+                                              textStyle: const TextStyle(
+                                                fontSize: 20,
+                                              ),
+                                            ),
+                                          ),
                                   ),
                                 ),
                                 const SizedBox(
@@ -204,6 +220,7 @@ class _LoginState extends State<MyLoginPage> {
   }
 
   Future<void> _login() async {
+    var userProvider = Provider.of<UserProvider>(context, listen: false);
     String email = _emailController.text.trim();
     String password = _passwordController.text.trim();
 
@@ -216,17 +233,22 @@ class _LoginState extends State<MyLoginPage> {
             'user_password': password,
           },
         );
-      
 
         if (response.statusCode == 200) {
           // Parse the response JSON
           var responseData = json.decode(response.body);
-         
+          // print(responseData);
 
-          // // Store session data using shared_preferences
-          // SharedPreferences prefs = await SharedPreferences.getInstance();
-          // await prefs.setString('token', responseData['token']);
-          // await prefs.setString('email', email);
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          // print(responseData['token']+responseData['user'] );
+          userProvider.setUser(User.fromMap(responseData));
+          // print("User: ${userProvider.user.name}");
+          // print("User: ${userProvider.user.email}");
+          // print("User: ${userProvider.user.token}");
+          await prefs.setString('x-auth-token', userProvider.user.token);
+          // print("Token: ${responseData.token}");
+
+          // prefs.setString('x-auth-token', responseData['token']  );
 
           // Navigate to dashboard
           Navigator.pushNamed(context, '/dashboard');

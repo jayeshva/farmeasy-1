@@ -1,5 +1,11 @@
+import 'package:farmeasy/models/user.dart';
+import 'package:farmeasy/providers/userProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:intl/intl_standalone.dart';
+String url = "https://code.jayworks.tech:8000";
 
 class MyProfile extends StatefulWidget {
   const MyProfile({Key? key}) : super(key: key);
@@ -26,6 +32,14 @@ class _MyProfileState extends State<MyProfile> {
     'Rejected': 2,
     'Under Review': 3,
   };
+  void _launchURL(String url) async {
+  if (await canLaunchUrl(Uri.parse(url))) {
+    await launchUrl(Uri.parse(url));
+  } else {
+    throw 'Could not launch $url';
+  }
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +52,7 @@ class _MyProfileState extends State<MyProfile> {
 
     // Extract the first letter of the name for the profile image
     String profileInitial = name.isNotEmpty ? name[0].toUpperCase() : '';
+    final user = Provider.of<UserProvider>(context).user;
 
     return MaterialApp(
       home: Scaffold(
@@ -68,18 +83,13 @@ class _MyProfileState extends State<MyProfile> {
               CircleAvatar(
                 radius: 50,
                 backgroundColor: Colors.blue,
-                child: Text(
-                  profileInitial,
-                  style: TextStyle(fontSize: 35, color: Colors.white),
-                ),
+                backgroundImage: NetworkImage('$url/${user.img}'),
               ),
               const SizedBox(height: 20),
-              _buildProfileInfo('Name', name),
-              _buildProfileInfo('Email', email),
-              _buildProfileInfo('Phone', phone),
-              _buildProfileInfo('Gender', gender),
-              _buildProfileInfo('Aadhaar', aadhaar),
-              _buildProfileInfo('PAN', pan),
+              _buildProfileInfo('Name', user.name),
+              _buildProfileInfo('Email',user.email),
+              _buildProfileInfo('Phone', user.mobile),
+              _buildProfileInfo('Gender', user.gender),
               Text("Subsidy Data",
                   style: GoogleFonts.assistant(
                       textStyle: const TextStyle(
@@ -94,6 +104,7 @@ class _MyProfileState extends State<MyProfile> {
               ElevatedButton(
                 onPressed: () {
                   // View uploaded PAN document
+                  _launchURL(url +'/'+ user.pan!);
                 },
                 child: Text('View PAN Document'),
                 style: ElevatedButton.styleFrom(
@@ -104,6 +115,7 @@ class _MyProfileState extends State<MyProfile> {
               ElevatedButton(
                 onPressed: () {
                   // View uploaded Aadhaar document
+                   _launchURL(url+'/' + user.pan!);
                 },
                 child: Text('View Aadhaar Document'),
                 style: ElevatedButton.styleFrom(
