@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:html';
 import 'package:farmeasy/models/user.dart';
 import 'package:farmeasy/providers/userProvider.dart';
 import 'package:flutter/material.dart';

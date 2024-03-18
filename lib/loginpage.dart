@@ -1,4 +1,3 @@
-import 'dart:html';
 import 'package:intl/intl_standalone.dart';
 import 'package:farmeasy/models/user.dart';
 import 'package:farmeasy/providers/userProvider.dart';

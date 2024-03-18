@@ -5,7 +5,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:intl/intl.dart';
-import 'dart:html';
 import 'package:intl/intl_standalone.dart';
 import 'package:farmeasy/providers/userProvider.dart';
 import 'package:provider/provider.dart';
