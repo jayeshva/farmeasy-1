@@ -38,7 +38,7 @@ class _MySplashState extends State<MySplash> {
           Navigator.pushNamed(context, "/dashboard");
         }
       } else {
-        // Navigator.pushNamed(context, "/signin");
+        Navigator.pushNamed(context, "/signin");
       }
     } else {
       print("No token found");

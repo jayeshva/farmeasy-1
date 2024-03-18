@@ -1,10 +1,16 @@
+import 'dart:convert';
+
 import 'package:farmeasy/models/user.dart';
 import 'package:farmeasy/providers/userProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:intl/intl_standalone.dart';
+import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
+
 String url = "https://code.jayworks.tech:8000";
 
 class MyProfile extends StatefulWidget {
@@ -33,14 +39,33 @@ class _MyProfileState extends State<MyProfile> {
     'Under Review': 3,
   };
   void _launchURL(String url) async {
-  if (await canLaunchUrl(Uri.parse(url))) {
-    await launchUrl(Uri.parse(url));
-  } else {
-    throw 'Could not launch $url';
+    if (await canLaunchUrl(Uri.parse(url))) {
+      await launchUrl(Uri.parse(url));
+    } else {
+      throw 'Could not launch $url';
+    }
   }
-}
 
+  Future<void> getData() async {
+    var userProvider = Provider.of<UserProvider>(context, listen: false);
+    SharedPreferences prefs = await SharedPreferences.getInstance();
 
+    String? token = prefs.getString('x-auth-token');
+
+    var response = await http.get(Uri.parse('$url/user'), headers: {
+      'x-auth-token': token!,
+    });
+    if (response.statusCode == 200) {
+      var responseData = json.decode(response.body);
+
+      userProvider.setUser(User.fromMap(responseData));
+    }
+  }
+@override
+  void initState() {
+    super.initState();
+    getData();
+  }
   @override
   Widget build(BuildContext context) {
     String name = userData['Name'] ?? '';
@@ -87,7 +112,7 @@ class _MyProfileState extends State<MyProfile> {
               ),
               const SizedBox(height: 20),
               _buildProfileInfo('Name', user.name),
-              _buildProfileInfo('Email',user.email),
+              _buildProfileInfo('Email', user.email),
               _buildProfileInfo('Phone', user.mobile),
               _buildProfileInfo('Gender', user.gender),
               Text("Subsidy Data",
@@ -96,15 +121,15 @@ class _MyProfileState extends State<MyProfile> {
                           fontSize: 22,
                           color: Colors.black,
                           fontWeight: FontWeight.bold))),
-              _buildProfileInfo('Applied', pan),
-              _buildProfileInfo('Approved', pan),
-              _buildProfileInfo('Rejected', pan),
-              _buildProfileInfo('Under Reveiew', pan),
+              _buildSubsidyCount('Applied', user.applied),
+              _buildSubsidyCount('Approved', user.approved),
+              _buildSubsidyCount('Rejected', user.rejected),
+              _buildSubsidyCount('Under Reveiew', user.underReview),
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
                   // View uploaded PAN document
-                  _launchURL(url +'/'+ user.pan!);
+                  _launchURL(url + '/' + user.pan!);
                 },
                 child: Text('View PAN Document'),
                 style: ElevatedButton.styleFrom(
@@ -115,7 +140,7 @@ class _MyProfileState extends State<MyProfile> {
               ElevatedButton(
                 onPressed: () {
                   // View uploaded Aadhaar document
-                   _launchURL(url+'/' + user.pan!);
+                  _launchURL(url + '/' + user.pan!);
                 },
                 child: Text('View Aadhaar Document'),
                 style: ElevatedButton.styleFrom(

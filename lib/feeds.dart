@@ -28,7 +28,9 @@ class _MyFeedsState extends State<MyFeeds> {
   Future<void> fetchFeeds() async {
       var token = Provider.of<UserProvider>(context, listen: false).user.token;
 
-    final response = await http.get(Uri.parse('$url/feeds/getFeeds'));
+    final response = await http.get(Uri.parse('$url/feeds/getFeeds'),
+     headers: {'x-auth-token': token});
+    
     if (response.statusCode == 200) {
       var responseData = jsonDecode(response.body);
       var finalData = responseData['data'];

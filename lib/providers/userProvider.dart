@@ -13,7 +13,12 @@ class UserProvider with ChangeNotifier {
       pan:'',
       img: '',
       token: '',
-      gender: '' 
+      gender: '' ,
+      applied: 0,
+      approved: 0,
+      rejected: 0,
+      underReview: 0
+
     );
 
     User get user => _user;
