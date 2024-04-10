@@ -188,75 +188,63 @@ class RequestWidget extends StatelessWidget {
       elevation: 5,
       child: Padding(
         padding: const EdgeInsets.all(10),
-        child: Row(
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            Text(
+              schemaName!,
+              style: GoogleFonts.alata(fontSize: 16),
+            ),
+            const SizedBox(height: 5),
+            Text(
+              "Scheme id      : $subsidy_id",
+              style: GoogleFonts.alata(fontSize: 12),
+            ),
+            Text(
+              "Scheme category     : $scheme_category",
+              style: GoogleFonts.alata(
+                fontSize: 12,
+                color: Colors.grey,
+              ),
+            ),
+            Text(
+              "Applied on      : $applied_on",
+              style: GoogleFonts.alata(
+                fontSize: 12,
+                color: Colors.grey,
+              ),
+            ),
+            const SizedBox(height: 5),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
-                  schemaName!,
-                  style: GoogleFonts.alata(fontSize: 16),
-                ),
-                const SizedBox(height: 5),
-                Text(
-                  "Scheme id      : $subsidy_id",
-                  style: GoogleFonts.alata(fontSize: 12),
-                ),
-                Text(
-                  "Scheme category     : $scheme_category",
+                  "Status : ",
                   style: GoogleFonts.alata(
-                    fontSize: 12,
-                    color: Colors.grey,
+                    color: Colors.black,
                   ),
                 ),
                 Text(
-                  "Applied on      : $applied_on",
+                  review_status!,
                   style: GoogleFonts.alata(
-                    fontSize: 12,
-                    color: Colors.grey,
+                    color: getColorForStatus(review_status),
                   ),
                 ),
               ],
             ),
-            const SizedBox(width: 50),
-            Expanded(
-              flex: 2,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Text(
-                        "Status : ",
-                        style: GoogleFonts.alata(
-                          color: Colors.black,
-                        ),
-                      ),
-                      Text(
-                        review_status!,
-                        style: GoogleFonts.alata(
-                          color: getColorForStatus(review_status),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 5),
-                  Text(
-                    "Comments : ",
-                    style: GoogleFonts.alata(
-                      fontSize: 12,
-                      color: Colors.black,
-                    ),
-                  ),
-                  Text(
-                    review_comments!,
-                    style: GoogleFonts.alata(
-                      fontSize: 12,
-                      color: Colors.grey,
-                    ),
-                  ),
-                ],
+            const SizedBox(height: 5),
+            Text(
+              "Comments : ",
+              style: GoogleFonts.alata(
+                fontSize: 12,
+                color: Colors.black,
+              ),
+            ),
+            Text(
+              review_comments!,
+              style: GoogleFonts.alata(
+                fontSize: 12,
+                color: Colors.grey,
               ),
             ),
           ],
